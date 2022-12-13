@@ -1,0 +1,48 @@
+{
+  "name": "junior-hizollo",
+  "version": "1.1.1",
+  "description": "用 TypeScript 寫成的爛 bot",
+  "main": "dist/src/index.js",
+  "private": true,
+  "engines": {
+    "node": ">=16.9.0"
+  },
+  "scripts": {
+    "dev": "tsc-watch --onSuccess resolve-tspaths",
+    "build": "tsc",
+    "postbuild": "resolve-tspaths",
+    "deploy": "node dist/src/deploy.js",
+    "rg-webhook": "node dist/src/register-webhook.js",
+    "start": "node dist/src/index.js",
+    "test": "node dist/src/index.js dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HiZollo/Junior-HiZollo.git"
+  },
+  "keywords": [
+    "HiZollo"
+  ],
+  "author": "HiZollo Organization",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/HiZollo/Junior-HiZollo/issues"
+  },
+  "homepage": "https://github.com/HiZollo/Junior-HiZollo#readme",
+  "dependencies": {
+    "@discordjs/voice": "^0.13.0",
+    "@hizollo/games": "^2.4.0",
+    "@hizollo/osu-api": "^1.2.0",
+    "discord.js": "^14.6.0",
+    "dotenv": "^16.0.3",
+    "emoji-regex": "^10.2.1",
+    "ffmpeg-static": "^5.1.0",
+    "libsodium-wrappers": "^0.7.10",
+    "play-dl": "^1.9.6",
+    "typescript": "^4.9.3"
+  },
+  "devDependencies": {
+    "resolve-tspaths": "^0.8.3",
+    "tsc-watch": "^5.0.3"
+  }
+}

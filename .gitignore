@@ -1,0 +1,20 @@
+# builds
+dist
+
+# node
+node_modules
+
+# package lockers
+package-lock.json
+yarn.lock
+
+# data
+*.bat
+*.txt
+.DS_Store
+.env
+
+# editor
+.vscode
+*.swp
+

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { Awaitable, Collection, Message, PermissionFlagsBits } from "discord.js";
 import { EventEmitter } from "node:events";
-import { HiddenCommand } from "./HiddenCommand";
+import { MessageTrigger } from "./MessageTrigger";
 import { HZClient } from "./HZClient";
 import missingPermissions from "../services/missingPermissions";
 import { HiddenCommandManagerEvents } from "../typings/interfaces";
@@ -11,7 +11,7 @@ import { HiddenCommandManagerEvents } from "../typings/interfaces";
  * 掌管所有隱藏指令
  * @extends EventEmitter
  */
-export class HiddenCommandManager extends EventEmitter {
+export class MessageTriggerManager extends EventEmitter {
 	/**
 	 * 機器人的 client
 	 */
@@ -20,7 +20,7 @@ export class HiddenCommandManager extends EventEmitter {
 	/**
 	 * 所有隱藏指令
 	 */
-	private commands: Collection<string, HiddenCommand>;
+	private commands: Collection<string, MessageTrigger>;
 
 	/**
 	 * 隱藏指令是否已載入完畢
@@ -48,7 +48,7 @@ export class HiddenCommandManager extends EventEmitter {
 		const commandFiles = fs.readdirSync(dirPath);
 		for (const file of commandFiles) {
 			if (!file.endsWith(".js")) continue;
-			const C: new () => HiddenCommand = require(path.join(dirPath, file)).default;
+			const C: new () => MessageTrigger = require(path.join(dirPath, file)).default;
 			const command = new C();
 			this.commands.set(command.name, command);
 		}

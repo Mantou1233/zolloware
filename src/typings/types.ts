@@ -4,7 +4,7 @@ import { AutocompleteManager } from "../classes/AutocompleteManager";
 import { ButtonManager } from "../classes/ButtonManager";
 import { CommandManager } from "../classes/CommandManager";
 import CooldownManager from "../classes/CooldownManager";
-import { HiddenCommandManager } from "../classes/HiddenCommandManager";
+import { MessageTriggerManager } from "../classes/MessageTriggerManager";
 import { HZNetwork } from "../classes/HZNetwork";
 import { SelectMenuManager } from "../classes/SelectMenuManager";
 import { WebhookLogger } from "../classes/WebhookLogger";
@@ -101,7 +101,7 @@ declare module "discord.js" {
 		/**
 		 * 隱藏指令管家
 		 */
-		triggers: HiddenCommandManager;
+		triggers: MessageTriggerManager;
 
 		/**
 		 * 自動匹配管家

@@ -6,7 +6,7 @@ import randomInt from "../services/randomInt";
  * 一個隱藏指令的藍圖
  * @abstract
  */
-export abstract class HiddenCommand {
+export abstract class MessageTrigger {
 	/**
 	 * 指令的名稱
 	 */

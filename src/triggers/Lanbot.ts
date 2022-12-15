@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
-import { HiddenCommand } from "../classes/HiddenCommand";
+import { MessageTrigger } from "../classes/MessageTrigger";
 
-export default class Lanbot extends HiddenCommand {
+export default class Lanbot extends MessageTrigger {
 	constructor() {
 		super("lanbot");
 	}

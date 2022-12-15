@@ -14,7 +14,7 @@ import { WebhookLogger } from "./WebhookLogger";
 import randomElement from "../services/randomElement";
 import randomInt from "../services/randomInt";
 import { Translator } from "./Translator";
-import { HiddenCommandManager } from "./HiddenCommandManager";
+import { MessageTriggerManager } from "./MessageTriggerManager";
 
 /**
  * 擴展的 client
@@ -36,7 +36,7 @@ export class HZClient extends Client {
 		this.logger = new WebhookLogger(this);
 
 		this.commands = new CommandManager(this);
-		this.triggers = new HiddenCommandManager(this);
+		this.triggers = new MessageTriggerManager(this);
 		this.autocomplete = new AutocompleteManager(this);
 		this.buttons = new ButtonManager(this);
 		this.selectmenus = new SelectMenuManager(this);

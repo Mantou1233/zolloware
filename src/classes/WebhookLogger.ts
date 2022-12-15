@@ -132,7 +132,7 @@ ID：${guild.id}
 	 * @param message 來源訊息
 	 * @param commandName 指令名稱
 	 */
-	public hiddenExecuted(message: Message, commandName: string): void {
+	public triggerExecuted(message: Message, commandName: string): void {
 		const description = `隱藏指令：${commandName}
 執行者：${message.author}
 伺服器：${message.guild!.id}`;

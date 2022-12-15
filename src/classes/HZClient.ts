@@ -4,16 +4,15 @@ import { CommandManager } from "./CommandManager";
 import CooldownManager from "./CooldownManager";
 import config from "@root/config";
 import constant from "@root/constant.json";
-import getActivity from "../features/utils/getActivity";
-import { HZClientOptions } from "../utils/interfaces";
-import { ClientMusicManager } from "../classes/Music/Model/ClientMusicManager";
+import getActivity from "../services/getActivity";
+import { HZClientOptions } from "../typings/interfaces";
 import { HZNetwork } from "./HZNetwork";
 import { AutocompleteManager } from "./AutocompleteManager";
 import { ButtonManager } from "./ButtonManager";
 import { SelectMenuManager } from "./SelectMenuManager";
 import { WebhookLogger } from "./WebhookLogger";
-import randomElement from "../features/utils/randomElement";
-import randomInt from "../features/utils/randomInt";
+import randomElement from "../services/randomElement";
+import randomInt from "../services/randomInt";
 import { Translator } from "./Translator";
 import { HiddenCommandManager } from "./HiddenCommandManager";
 
@@ -37,13 +36,12 @@ export class HZClient extends Client {
 		this.logger = new WebhookLogger(this);
 
 		this.commands = new CommandManager(this);
-		this.hidden = new HiddenCommandManager(this);
+		this.triggers = new HiddenCommandManager(this);
 		this.autocomplete = new AutocompleteManager(this);
 		this.buttons = new ButtonManager(this);
 		this.selectmenus = new SelectMenuManager(this);
 
 		this.cooldown = new CooldownManager(this);
-		this.music = new ClientMusicManager(this);
 		this.network = new HZNetwork(this);
 
 		this.angryList = new Collection();
@@ -67,7 +65,7 @@ export class HZClient extends Client {
 	 */
 	public async initialize(): Promise<void> {
 		await this.commands.load(path.join(__dirname, "../commands/"));
-		await this.hidden.load(path.join(__dirname, "../hidden"));
+		await this.triggers.load(path.join(__dirname, "../triggers"));
 		await this.autocomplete.load(path.join(__dirname, "../autocomplete"));
 		await this.buttons.load(path.join(__dirname, "../buttons"));
 		await this.selectmenus.load(path.join(__dirname, "../selectmenus"));

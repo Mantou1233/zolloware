@@ -10,7 +10,7 @@ import { ApplicationCommandOptionType, EmbedBuilder, GatewayIntentBits, Options 
 import "./djsAddon";
 import config from "@root/config";
 import { HZClient } from "./classes/HZClient";
-import { CommandManagerRejectReason, CommandParserOptionResultStatus } from "./utils/enums";
+import { CommandManagerRejectReason, CommandParserOptionResultStatus } from "./typings/enums";
 const client = new HZClient({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -53,7 +53,7 @@ client.commands.on("reject", async (source, info) => {
 			helper.setTitle("(ﾒﾟДﾟ)ﾒ").setDescription(`你就是剛剛丟我的那個人！我才不想理你勒，你 ${~~(info.args[0] / 1000)} 秒之後再來跟我談！`);
 			break;
 
-		case CommandManagerRejectReason.TwoFactorRequird:
+		case CommandManagerRejectReason.TwoFactorRequired:
 			helper.setTitle("2FA 不讓我執行這個指令").setDescription(`因為這個伺服器開啟了 2FA 驗證，所以我無法執行這個指令`);
 			break;
 
@@ -173,8 +173,8 @@ client.commands.on("executed", (source, commandName, ...args) => {
 /**/
 
 /******************* 隱藏指令執行 *******************/
-client.hidden.on("executed", (message, commandName) => {
-	client.logger.hiddenExecuted(message, commandName);
+client.triggers.on("executed", (message, commandName) => {
+	client.logger.triggerExecuted(message, commandName);
 });
 /**/
 
@@ -230,7 +230,7 @@ client.on("messageCreate", message => {
 	client.randomReact(message);
 	client.poll(message);
 	client.commands.onMessageCreate(message);
-	client.hidden.onMessageCreate(message);
+	client.triggers.onMessageCreate(message);
 	client.network.onMessageCreate(message);
 });
 /**/
@@ -273,12 +273,6 @@ client.on("guildCreate", guild => {
 client.on("guildDelete", guild => {
 	client.logger.leaveGuild(guild);
 	client.network.onGuildDelete(guild);
-});
-/**/
-
-/******************* 語音狀態改變 *******************/
-client.on("voiceStateUpdate", (oldState, newState) => {
-	client.music.onVoiceStateUpdate(oldState, newState);
 });
 /**/
 

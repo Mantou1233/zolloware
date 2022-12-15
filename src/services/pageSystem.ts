@@ -1,8 +1,8 @@
 import { ActionRowBuilder, SelectMenuBuilder } from "@discordjs/builders";
 import { APISelectMenuOption, ButtonBuilder, ButtonStyle, ComponentType, InteractionCollector, SelectMenuInteraction } from "discord.js";
-import { PageSystemMode } from "../../utils/enums.js";
-import { PageSystemDescriptionOptions, PageSystemEmbedFieldOptions, PageSystemPagesOptions } from "../../utils/interfaces.js";
-import { PageSystemOptions } from "../../utils/types.js";
+import { PageSystemMode } from "../typings/enums.js";
+import { PageSystemDescriptionOptions, PageSystemEmbedFieldOptions, PageSystemPagesOptions } from "../typings/interfaces.js";
+import { PageSystemOptions } from "../typings/types.js";
 import fixedDigits from "./fixedDigits.js";
 import randomInt from "./randomInt.js";
 

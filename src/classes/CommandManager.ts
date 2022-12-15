@@ -7,10 +7,10 @@ import { CommandParser } from "./CommandParser";
 import { HZClient } from "./HZClient";
 import { Source } from "./Source";
 import config from "@root/config";
-import missingPermissions from "../features/utils/missingPermissions";
-import { CommandManagerRejectReason, CommandParserOptionResultStatus, CommandType } from "../utils/enums";
-import { CommandManagerEvents, SubcommandGroup } from "../utils/interfaces";
-import { CommandManagerRejectInfo } from "../utils/types";
+import missingPermissions from "../services/missingPermissions";
+import { CommandManagerRejectReason, CommandParserOptionResultStatus, CommandType } from "../typings/enums";
+import { CommandManagerEvents, SubcommandGroup } from "../typings/interfaces";
+import { CommandManagerRejectInfo } from "../typings/types";
 import { SubcommandManager } from "./SubcommandManager";
 import { Translator } from "./Translator";
 
@@ -127,7 +127,7 @@ export class CommandManager extends EventEmitter {
 		/***** 檢查執行權限 *****/
 		if (command.twoFactorRequired && interaction.guild.mfaLevel === GuildMFALevel.Elevated) {
 			this.emit("reject", new Source(interaction, channel, member), {
-				reason: CommandManagerRejectReason.TwoFactorRequird,
+				reason: CommandManagerRejectReason.TwoFactorRequired,
 				args: []
 			});
 			return;
@@ -267,7 +267,7 @@ export class CommandManager extends EventEmitter {
 		/***** 檢查執行權限 *****/
 		if (command.twoFactorRequired && message.guild.mfaLevel === GuildMFALevel.Elevated) {
 			this.emit("reject", new Source(message, channel, member), {
-				reason: CommandManagerRejectReason.TwoFactorRequird,
+				reason: CommandManagerRejectReason.TwoFactorRequired,
 				args: []
 			});
 		}

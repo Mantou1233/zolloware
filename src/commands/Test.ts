@@ -1,6 +1,6 @@
 import { Command } from "../classes/Command";
 import { Source } from "../classes/Source";
-import { CommandType } from "../utils/enums";
+import { CommandType } from "../typings/enums";
 
 export default class Ping extends Command<[]> {
 	constructor() {

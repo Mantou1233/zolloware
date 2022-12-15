@@ -4,8 +4,8 @@ import { Awaitable, Collection, Message, PermissionFlagsBits } from "discord.js"
 import { EventEmitter } from "node:events";
 import { HiddenCommand } from "./HiddenCommand";
 import { HZClient } from "./HZClient";
-import missingPermissions from "../features/utils/missingPermissions";
-import { HiddenCommandManagerEvents } from "../utils/interfaces";
+import missingPermissions from "../services/missingPermissions";
+import { HiddenCommandManagerEvents } from "../typings/interfaces";
 
 /**
  * 掌管所有隱藏指令

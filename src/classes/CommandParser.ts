@@ -7,9 +7,9 @@ import {
 	MessageMentions
 } from "discord.js";
 import emojiRegex from "emoji-regex";
-import { ArgumentParseType, CommandOptionType, CommandParserOptionResultStatus } from "../utils/enums";
-import { CommandParserOptionResult, CommandParserResult } from "../utils/types";
-import { ArgumentParseMethod, HZCommandOptionData } from "../utils/types";
+import { ArgumentParseType, CommandOptionType, CommandParserOptionResultStatus } from "../typings/enums";
+import { CommandParserOptionResult, CommandParserResult } from "../typings/types";
+import { ArgumentParseMethod, HZCommandOptionData } from "../typings/types";
 import { Command } from "./Command";
 
 type ParseMessageOptionFunctions = {

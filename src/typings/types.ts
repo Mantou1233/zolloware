@@ -6,7 +6,6 @@ import { CommandManager } from "../classes/CommandManager";
 import CooldownManager from "../classes/CooldownManager";
 import { HiddenCommandManager } from "../classes/HiddenCommandManager";
 import { HZNetwork } from "../classes/HZNetwork";
-import { ClientMusicManager } from "../classes/Music/Model/ClientMusicManager";
 import { SelectMenuManager } from "../classes/SelectMenuManager";
 import { WebhookLogger } from "../classes/WebhookLogger";
 import { ArgumentParseType, CommandManagerRejectReason, CommandOptionType } from "./enums";
@@ -37,7 +36,7 @@ export type CommandParserResult = CommandParserPassResult | CommandParserFailRes
 
 export type CommandManagerRejectInfo =
 	| { reason: CommandManagerRejectReason.Angry; args: [time: number] }
-	| { reason: CommandManagerRejectReason.TwoFactorRequird; args: [] }
+	| { reason: CommandManagerRejectReason.TwoFactorRequired; args: [] }
 	| {
 			reason: CommandManagerRejectReason.BotMissingPermission;
 			args: [missings: (keyof PermissionFlags)[]];
@@ -102,7 +101,7 @@ declare module "discord.js" {
 		/**
 		 * 隱藏指令管家
 		 */
-		hidden: HiddenCommandManager;
+		triggers: HiddenCommandManager;
 
 		/**
 		 * 自動匹配管家
@@ -123,11 +122,6 @@ declare module "discord.js" {
 		 * 冷卻系統管家
 		 */
 		cooldown: CooldownManager;
-
-		/**
-		 * 音樂系統管家
-		 */
-		music: ClientMusicManager;
 
 		/**
 		 * Network 管家

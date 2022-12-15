@@ -1,6 +1,6 @@
 import { Message, MessageCreateOptions } from "discord.js";
-import randomElement from "../features/utils/randomElement";
-import randomInt from "../features/utils/randomInt";
+import randomElement from "../services/randomElement";
+import randomInt from "../services/randomInt";
 
 /**
  * 一個隱藏指令的藍圖

@@ -1,5 +1,5 @@
 import { ButtonBuilder, ModalBuilder } from "@discordjs/builders";
-import { VoiceConnection } from "@discordjs/voice";
+
 import {
 	APIEmbedField,
 	ApplicationCommandOptionChoiceData,
@@ -7,19 +7,12 @@ import {
 	Collection,
 	EmbedBuilder,
 	Guild,
-	GuildMember,
-	GuildTextBasedChannel,
 	Message,
 	MessageCreateOptions,
 	TextChannel,
-	User,
-	VoiceBasedChannel
+	User
 } from "discord.js";
-import { InfoData, YouTubeStream } from "play-dl";
-import { HZClient } from "../classes/HZClient";
 import { Source } from "../classes/Source";
-import { GuildMusicManager } from "../classes/Music/Model/GuildMusicManager";
-import { MusicViewRenderer } from "../classes/Music/View/MusicViewRenderer";
 import { CommandParserOptionResultStatus, CommandType, PageSystemMode } from "./enums";
 import { ArgumentParseMethod, HZCommandOptionData } from "./types";
 import { Command } from "../classes/Command";
@@ -167,26 +160,4 @@ export interface YesNoSystemOptions {
 	contents: {
 		idle: string;
 	};
-}
-
-export interface GuildMusicManagerOptions {
-	client: HZClient;
-	view: MusicViewRenderer;
-	voiceChannel: VoiceBasedChannel;
-	textChannel: GuildTextBasedChannel;
-	connection: VoiceConnection;
-	autoSuppress: boolean;
-}
-
-export interface TrackOptions {
-	requester: GuildMember;
-	stream: YouTubeStream;
-	info: InfoData;
-}
-
-export interface GuildMusicControllerOptions {
-	client: HZClient;
-	channel: GuildTextBasedChannel;
-	view: MusicViewRenderer;
-	manager: GuildMusicManager;
 }

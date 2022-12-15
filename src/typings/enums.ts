@@ -11,7 +11,7 @@ export enum CommandParserOptionResultStatus {
 
 export enum CommandManagerRejectReason {
 	Angry,
-	TwoFactorRequird,
+	TwoFactorRequired,
 	BotMissingPermission,
 	UserMissingPermission,
 	InCooldown,

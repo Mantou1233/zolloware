@@ -12,7 +12,7 @@ import {
 	User,
 	WebhookEditMessageOptions
 } from "discord.js";
-import tempMessage from "../features/utils/tempMessage";
+import tempMessage from "../services/tempMessage";
 
 /**
  * 把斜線指令與訊息融合的類別

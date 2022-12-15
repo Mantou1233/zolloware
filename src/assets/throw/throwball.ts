@@ -1,8 +1,8 @@
 import { Client, GuildMember } from "discord.js";
-import { ThrowBallType } from "../../utils/types";
-import randomElement from "../utils/randomElement";
-import randomInt from "../utils/randomInt";
-import removeMd from "../utils/removeMd";
+import { ThrowBallType } from "../../typings/types";
+import randomElement from "../../services/randomElement";
+import randomInt from "../../services/randomInt";
+import removeMd from "../../services/removeMd";
 import baseball from "./baseball";
 import bowling from "./bowling";
 import chocolate from "./chocolate";

@@ -1,6 +1,6 @@
 import { EmbedBuilder, GuildMember, User } from "discord.js";
 import config from "@root/config";
-import randomInt from "../features/utils/randomInt";
+import randomInt from "../services/randomInt";
 
 Object.defineProperties(EmbedBuilder.prototype, {
 	applyHiZolloSettings: {

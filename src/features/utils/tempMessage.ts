@@ -1,4 +1,9 @@
-import { Message, BaseMessageOptions, MessagePayload, TextBasedChannel } from "discord.js";
+import {
+	Message,
+	BaseMessageOptions,
+	MessagePayload,
+	TextBasedChannel
+} from "discord.js";
 
 /**
  * 在指定頻道中發送訊息，並在特定秒數後刪除，如果秒數是負數則不會刪除該訊息
@@ -7,12 +12,16 @@ import { Message, BaseMessageOptions, MessagePayload, TextBasedChannel } from "d
  * @param duration 訊息留存時間
  * @returns 送出的訊息
  */
-export default async function tempMessage(channel: TextBasedChannel, messageResolvable: string | MessagePayload | BaseMessageOptions, duration: number = 5): Promise<Message> {
-  const message = await channel.send(messageResolvable);
-  if (duration >= 0) {
-    setTimeout(() => {
-      message.delete().catch(() => {});
-    }, 1000 * duration);
-  }
-  return message;
+export default async function tempMessage(
+	channel: TextBasedChannel,
+	messageResolvable: string | MessagePayload | BaseMessageOptions,
+	duration: number = 5
+): Promise<Message> {
+	const message = await channel.send(messageResolvable);
+	if (duration >= 0) {
+		setTimeout(() => {
+			message.delete().catch(() => {});
+		}, 1000 * duration);
+	}
+	return message;
 }

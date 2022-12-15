@@ -6,5 +6,5 @@ import randomInt from "./randomInt";
  * @returns 隨機元素
  */
 export default function randomElement<T>(array: T[]): T {
-  return array[randomInt(0, array.length - 1)];
+	return array[randomInt(0, array.length - 1)];
 }

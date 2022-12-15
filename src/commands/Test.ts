@@ -5,9 +5,17 @@ import { CommandType } from "../utils/enums";
 export default class Ping extends Command<[]> {
 	constructor() {
 		super({
-			type: CommandType.Miscellaneous,
-			name: "ping",
-			description: "敲一下我的大腿看我的反應時間"
+			type: CommandType.Developer,
+			name: "test",
+			description: "敲一下我的大腿看我的反應時間",
+			aliases: [
+				"paren<K>",
+				"SYNM",
+				'fra"c',
+				"fucko'suck",
+				"testify",
+				"rt"
+			]
 		});
 	}
 

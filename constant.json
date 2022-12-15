@@ -24,8 +24,8 @@
     "dtw": "https://discordservers.tw/bots/584677291318312963"
   },
   "mainGuild": {
-    "name": "HiZollo 官方伺服器",
-    "id": "572733182412193792",
+    "name": "zollo",
+    "id": "1026816602588590100",
     "inviteLink": "https://discord.gg/xUXTrYG2MZ",
     "channels": {
       "announcementId": "793146488933842954",
@@ -41,6 +41,6 @@
     }
   },
   "devGuild": {
-    "id": "784971366234587137"
+    "id": "1026816602588590100"
   }
 }

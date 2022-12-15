@@ -11,11 +11,6 @@ export default class Omg extends HiddenCommand {
 	}
 
 	public execute(message: Message): boolean {
-		return this.rareResponse(
-			message,
-			["Oh my God!"],
-			["我的老天鵝阿"],
-			["oH mY GOd"]
-		);
+		return this.rareResponse(message, ["Oh my God!"], ["我的老天鵝阿"], ["oH mY GOd"]);
 	}
 }

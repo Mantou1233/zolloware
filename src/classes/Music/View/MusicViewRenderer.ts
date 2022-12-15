@@ -3,11 +3,7 @@ import { ButtonInteraction } from "discord.js";
 import { YouTubeVideo } from "play-dl";
 import { HZClient } from "../../../classes/HZClient";
 import { Source } from "../../../classes/Source";
-import {
-	MusicControllerActions,
-	MusicLoopState,
-	PageSystemMode
-} from "../../../utils/enums";
+import { MusicControllerActions, MusicLoopState, PageSystemMode } from "../../../utils/enums";
 import { PageSystemPagesOptions } from "../../../utils/interfaces";
 import fixedDigits from "../../../features/utils/fixedDigits";
 import pageSystem from "../../../features/utils/pageSystem";
@@ -38,9 +34,7 @@ export class MusicViewRenderer {
 	 * @returns 顯示此資訊的訊息
 	 */
 	public async invalidPlaylistUrl(source: Source): Promise<Message> {
-		const embed = this.baseEmbed.setDescription(
-			"我找不到這個播放清單連結的相關資訊，你可以重新輸入連結再試一次"
-		);
+		const embed = this.baseEmbed.setDescription("我找不到這個播放清單連結的相關資訊，你可以重新輸入連結再試一次");
 		return await source.update({ embeds: [embed] });
 	}
 
@@ -50,9 +44,7 @@ export class MusicViewRenderer {
 	 * @returns 顯示此資訊的訊息
 	 */
 	public async emptyPlaylist(message: Message): Promise<Message> {
-		const embed = this.baseEmbed.setDescription(
-			"這個播放清單似乎是空的，我在裡面找不到任何影片"
-		);
+		const embed = this.baseEmbed.setDescription("這個播放清單似乎是空的，我在裡面找不到任何影片");
 		return await message.edit({ embeds: [embed] });
 	}
 
@@ -62,9 +54,7 @@ export class MusicViewRenderer {
 	 * @returns 顯示此資訊的訊息
 	 */
 	public async invalidVideoUrl(source: Source): Promise<Message> {
-		const embed = this.baseEmbed.setDescription(
-			"我找不到這個影片連結的相關資訊，你可以重新輸入連結再試一次"
-		);
+		const embed = this.baseEmbed.setDescription("我找不到這個影片連結的相關資訊，你可以重新輸入連結再試一次");
 		return await source.update({ embeds: [embed] });
 	}
 
@@ -74,9 +64,7 @@ export class MusicViewRenderer {
 	 * @returns 顯示此資訊的訊息
 	 */
 	public async noSearchResult(source: Source): Promise<Message> {
-		const embed = this.baseEmbed.setDescription(
-			"我找不到任何與你的關鍵字相關的影片，請試試看其他關鍵字"
-		);
+		const embed = this.baseEmbed.setDescription("我找不到任何與你的關鍵字相關的影片，請試試看其他關鍵字");
 		return await source.update({ embeds: [embed] });
 	}
 
@@ -86,9 +74,7 @@ export class MusicViewRenderer {
 	 * @returns 顯示此資訊的訊息
 	 */
 	public async startParsingPlaylist(source: Source): Promise<Message> {
-		const embed = this.baseEmbed.setDescription(
-			"已開始讀取播放清單，如果播放清單太長，可能需要等待個幾分鐘"
-		);
+		const embed = this.baseEmbed.setDescription("已開始讀取播放清單，如果播放清單太長，可能需要等待個幾分鐘");
 		return await source.update({ embeds: [embed] });
 	}
 
@@ -99,9 +85,7 @@ export class MusicViewRenderer {
 	 * @returns 顯示此資訊的訊息
 	 */
 	public async trackLoaded(source: Source, track: Track): Promise<Message> {
-		const embed = this.baseEmbed.setDescription(
-			`${track.videoLink} 載入成功`
-		);
+		const embed = this.baseEmbed.setDescription(`${track.videoLink} 載入成功`);
 		return await source.update({ embeds: [embed] });
 	}
 
@@ -111,13 +95,8 @@ export class MusicViewRenderer {
 	 * @param trackCount 歌曲的數量
 	 * @returns 顯示此資訊的訊息
 	 */
-	public async bulkAddedToQueue(
-		source: Source,
-		trackCount: number
-	): Promise<Message> {
-		const embed = this.baseEmbed.setDescription(
-			`已將播放清單中的 ${trackCount} 首歌曲加入待播清單中`
-		);
+	public async bulkAddedToQueue(source: Source, trackCount: number): Promise<Message> {
+		const embed = this.baseEmbed.setDescription(`已將播放清單中的 ${trackCount} 首歌曲加入待播清單中`);
 		return await source.update({ embeds: [embed] });
 	}
 
@@ -127,10 +106,7 @@ export class MusicViewRenderer {
 	 * @param videos 可供選擇的歌曲
 	 * @returns 選中歌曲的連結
 	 */
-	public async selectVideo(
-		source: Source,
-		videos: YouTubeVideo[]
-	): Promise<string | void> {
+	public async selectVideo(source: Source, videos: YouTubeVideo[]): Promise<string | void> {
 		// 只有單頁，最多十筆資料
 		const pages: PageSystemPagesOptions[][] = [[]];
 		for (let i = 0; i < Math.min(videos.length, 10); i++) {
@@ -161,9 +137,7 @@ export class MusicViewRenderer {
 	 * @param channel 要傳送的目標頻道
 	 */
 	public async noPermOnStage(channel: GuildTextBasedChannel): Promise<void> {
-		const embed = this.baseEmbed.setDescription(
-			"我沒有辦法在這舞台頻道上發言！請你給我發言權或是讓我成為舞台版主"
-		);
+		const embed = this.baseEmbed.setDescription("我沒有辦法在這舞台頻道上發言！請你給我發言權或是讓我成為舞台版主");
 		tempMessage(channel, { embeds: [embed] }, 5);
 	}
 
@@ -172,13 +146,8 @@ export class MusicViewRenderer {
 	 * @param channel 要傳送的目標頻道
 	 * @param track 播放完畢的歌曲
 	 */
-	public async endOfTheTrack(
-		channel: GuildTextBasedChannel,
-		track: Track
-	): Promise<void> {
-		const embed = this.baseEmbed.setDescription(
-			`${track.videoLink} 已播放完畢`
-		);
+	public async endOfTheTrack(channel: GuildTextBasedChannel, track: Track): Promise<void> {
+		const embed = this.baseEmbed.setDescription(`${track.videoLink} 已播放完畢`);
 		tempMessage(channel, { embeds: [embed] }, 5);
 	}
 
@@ -187,8 +156,7 @@ export class MusicViewRenderer {
 	 * @param channel 要傳送的目標頻道
 	 */
 	public async endOfTheQueue(channel: GuildTextBasedChannel): Promise<void> {
-		const embed =
-			this.baseEmbed.setDescription("清單上的歌曲已全數播放完畢");
+		const embed = this.baseEmbed.setDescription("清單上的歌曲已全數播放完畢");
 		tempMessage(channel, { embeds: [embed] }, 5);
 	}
 
@@ -197,9 +165,7 @@ export class MusicViewRenderer {
 	 * @param channel 要傳送的目標頻道
 	 */
 	public async noHumanInVoice(channel: GuildTextBasedChannel): Promise<void> {
-		const embed = this.baseEmbed.setDescription(
-			"語音頻道好像沒有人了欸，那我也離開好了"
-		);
+		const embed = this.baseEmbed.setDescription("語音頻道好像沒有人了欸，那我也離開好了");
 		tempMessage(channel, { embeds: [embed] }, 5);
 	}
 
@@ -209,11 +175,7 @@ export class MusicViewRenderer {
 	 * @param interaction 按鈕互動
 	 * @param nowPlaying 正在播放的歌曲
 	 */
-	public async controllerAction(
-		action: MusicControllerActions,
-		interaction: ButtonInteraction,
-		nowPlaying: Track
-	): Promise<void> {
+	public async controllerAction(action: MusicControllerActions, interaction: ButtonInteraction, nowPlaying: Track): Promise<void> {
 		let description: string;
 		switch (action) {
 			case MusicControllerActions.Pause:
@@ -253,9 +215,7 @@ export class MusicViewRenderer {
 				return;
 		}
 
-		const embed = this.baseEmbed
-			.setDescription(description)
-			.setThumbnail(nowPlaying?.thumbnailUrl ?? null);
+		const embed = this.baseEmbed.setDescription(description).setThumbnail(nowPlaying?.thumbnailUrl ?? null);
 		if (interaction.channel) {
 			await tempMessage(interaction.channel, { embeds: [embed] }, 5);
 		}
@@ -265,9 +225,7 @@ export class MusicViewRenderer {
 	 * 告知使用者需要進入語音頻道才能控制此按鈕
 	 * @param interaction 按鈕互動
 	 */
-	public async controllerError(
-		interaction: ButtonInteraction
-	): Promise<void> {
+	public async controllerError(interaction: ButtonInteraction): Promise<void> {
 		await interaction.reply({
 			content: "你必須在語音頻道內才能操控這個按鈕",
 			ephemeral: true
@@ -292,9 +250,7 @@ export class MusicViewRenderer {
 	public getcontrollerEmbeds(manager: GuildMusicManager): EmbedBuilder[] {
 		return [
 			this.baseEmbed
-				.setDescription(
-					`目前正在播放：${manager.nowPlaying?.videoLink}`
-				)
+				.setDescription(`目前正在播放：${manager.nowPlaying?.videoLink}`)
 				.setThumbnail(manager.nowPlaying?.thumbnailUrl ?? null)
 				.setFooter({
 					text: `由 ${manager.nowPlaying?.requester.displayName} 指定的歌曲`,
@@ -310,9 +266,7 @@ export class MusicViewRenderer {
 		return `
 目前正在播放：${track.videoLink}
 
-播放時間：${this.msFormat(track.resource.playbackDuration)}／${this.msFormat(
-			track.length * 1000
-		)}
+播放時間：${this.msFormat(track.resource.playbackDuration)}／${this.msFormat(track.length * 1000)}
 
 上傳頻道：${track.channelLink}
 
@@ -331,10 +285,7 @@ export class MusicViewRenderer {
 	public msFormat(time: number): string {
 		time = Math.round(time / 1000);
 		const [h, m, s] = [~~(time / 3600), ~~((time % 3600) / 60), time % 60];
-		return `${h ? `${h}:${fixedDigits(m, 2)}` : `${m}`}:${fixedDigits(
-			s,
-			2
-		)}`;
+		return `${h ? `${h}:${fixedDigits(m, 2)}` : `${m}`}:${fixedDigits(s, 2)}`;
 	}
 
 	/**
@@ -352,8 +303,6 @@ export class MusicViewRenderer {
 			index++;
 		}
 
-		return `${views < 10 ? views.toFixed(1) : ~~views} ${
-			baseNames[index]
-		}次`;
+		return `${views < 10 ? views.toFixed(1) : ~~views} ${baseNames[index]}次`;
 	}
 }

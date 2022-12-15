@@ -9,9 +9,7 @@ export class YoutubeUtil extends null {
 	 * @param url 字串
 	 */
 	static isVideoUrl(url: string): boolean {
-		return /^((?:https?:)?\/\/)?(?:(?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|shorts\/|embed\/|v\/)?)([\w\-]+)(\S+)?$/.test(
-			url
-		);
+		return /^((?:https?:)?\/\/)?(?:(?:www|m|music)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|shorts\/|embed\/|v\/)?)([\w\-]+)(\S+)?$/.test(url);
 	}
 
 	/**
@@ -32,9 +30,7 @@ export class YoutubeUtil extends null {
 	static async getStream(url: string): Promise<YouTubeStream | void> {
 		let stream: YouTubeStream | void;
 		for (let i = 0; i < 5 && !stream; i++) {
-			stream = (await ytpl
-				.stream(url)
-				.catch(() => {})) as YouTubeStream | void;
+			stream = (await ytpl.stream(url).catch(() => {})) as YouTubeStream | void;
 		}
 		return stream;
 	}

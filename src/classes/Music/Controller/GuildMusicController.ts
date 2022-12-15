@@ -64,12 +64,7 @@ export class GuildMusicController {
 	 * 建立一台音樂遙控器
 	 * @param options 設定參數
 	 */
-	constructor({
-		client,
-		channel,
-		view,
-		manager
-	}: GuildMusicControllerOptions) {
+	constructor({ client, channel, view, manager }: GuildMusicControllerOptions) {
 		this.client = client;
 		this.channel = channel;
 		this.view = view;
@@ -80,17 +75,9 @@ export class GuildMusicController {
 		this.controllerButtons = [
 			this.getPlayButton(0),
 			this.getRepeatButton(0),
-			new ButtonBuilder()
-				.setCustomId("music_ctrl_skip")
-				.setStyle(ButtonStyle.Danger)
-				.setEmoji(this.emojis.skip)
+			new ButtonBuilder().setCustomId("music_ctrl_skip").setStyle(ButtonStyle.Danger).setEmoji(this.emojis.skip)
 		];
-		this.dataButtons = [
-			new ButtonBuilder()
-				.setCustomId("music_ctrl_info")
-				.setStyle(ButtonStyle.Success)
-				.setEmoji(this.emojis.info)
-		];
+		this.dataButtons = [new ButtonBuilder().setCustomId("music_ctrl_info").setStyle(ButtonStyle.Success).setEmoji(this.emojis.info)];
 	}
 
 	/**
@@ -126,17 +113,11 @@ export class GuildMusicController {
 	 */
 	private get newComponents(): ActionRowBuilder<ButtonBuilder>[] {
 		this.controllerButtons[0] = this.getPlayButton(+this.manager.paused);
-		this.controllerButtons[1] = this.getRepeatButton(
-			this.manager.nowPlaying!.loopState
-		);
+		this.controllerButtons[1] = this.getRepeatButton(this.manager.nowPlaying!.loopState);
 
 		return [
-			new ActionRowBuilder<ButtonBuilder>().addComponents(
-				...this.controllerButtons
-			),
-			new ActionRowBuilder<ButtonBuilder>().addComponents(
-				...this.dataButtons
-			)
+			new ActionRowBuilder<ButtonBuilder>().addComponents(...this.controllerButtons),
+			new ActionRowBuilder<ButtonBuilder>().addComponents(...this.dataButtons)
 		];
 	}
 
@@ -150,15 +131,10 @@ export class GuildMusicController {
 		const collector = this.message.createMessageComponentCollector({
 			componentType: ComponentType.Button,
 			filter: async interaction => {
-				if (!interaction.customId.startsWith("music_ctrl"))
-					return false;
+				if (!interaction.customId.startsWith("music_ctrl")) return false;
 				if (!(interaction.member instanceof GuildMember)) return false;
 
-				if (
-					interaction.member.voice.channelId !==
-						this.manager.voiceChannel.id &&
-					interaction.customId !== "music_ctrl_info"
-				) {
+				if (interaction.member.voice.channelId !== this.manager.voiceChannel.id && interaction.customId !== "music_ctrl_info") {
 					await this.view.controllerError(interaction);
 					return false;
 				}
@@ -176,13 +152,9 @@ export class GuildMusicController {
 			switch (args[2]) {
 				case "play":
 					this.manager.togglePlayState();
-					this.controllerButtons[0] = this.getPlayButton(
-						+this.manager.paused
-					);
+					this.controllerButtons[0] = this.getPlayButton(+this.manager.paused);
 					await this.view.controllerAction(
-						this.manager.paused
-							? MusicControllerActions.Pause
-							: MusicControllerActions.Resume,
+						this.manager.paused ? MusicControllerActions.Pause : MusicControllerActions.Resume,
 						interaction,
 						nowPlaying
 					);
@@ -190,15 +162,11 @@ export class GuildMusicController {
 
 				case "repeat":
 					this.manager.toggleLoopState();
-					this.controllerButtons[1] = this.getRepeatButton(
-						this.manager.nowPlaying!.loopState
-					);
+					this.controllerButtons[1] = this.getRepeatButton(this.manager.nowPlaying!.loopState);
 					await this.view.controllerAction(
-						this.manager.nowPlaying!.loopState ===
-							MusicLoopState.Normal
+						this.manager.nowPlaying!.loopState === MusicLoopState.Normal
 							? MusicControllerActions.NoRepeat
-							: this.manager.nowPlaying!.loopState ===
-							  MusicLoopState.Again
+							: this.manager.nowPlaying!.loopState === MusicLoopState.Again
 							? MusicControllerActions.Again
 							: MusicControllerActions.Repeat,
 						interaction,
@@ -208,19 +176,11 @@ export class GuildMusicController {
 
 				case "skip":
 					this.manager.skip();
-					await this.view.controllerAction(
-						MusicControllerActions.Skip,
-						interaction,
-						nowPlaying
-					);
+					await this.view.controllerAction(MusicControllerActions.Skip, interaction, nowPlaying);
 					return; // 跳過後附著訊息會被刪除，所以沒有 reply 也沒關係
 
 				case "info":
-					await this.view.controllerAction(
-						MusicControllerActions.Info,
-						interaction,
-						nowPlaying
-					);
+					await this.view.controllerAction(MusicControllerActions.Info, interaction, nowPlaying);
 					return; // 這邊 render 的時候會 reply，所以直接結束
 			}
 
@@ -230,12 +190,8 @@ export class GuildMusicController {
 		return collector;
 	}
 
-	private playButton = new ButtonBuilder()
-		.setCustomId("music_ctrl_play")
-		.setStyle(ButtonStyle.Primary);
-	private repeatButton = new ButtonBuilder()
-		.setCustomId("music_ctrl_repeat")
-		.setStyle(ButtonStyle.Secondary);
+	private playButton = new ButtonBuilder().setCustomId("music_ctrl_play").setStyle(ButtonStyle.Primary);
+	private repeatButton = new ButtonBuilder().setCustomId("music_ctrl_repeat").setStyle(ButtonStyle.Secondary);
 
 	/**
 	 * 取得播放狀態的按鈕

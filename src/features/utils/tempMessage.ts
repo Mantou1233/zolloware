@@ -1,9 +1,4 @@
-import {
-	Message,
-	BaseMessageOptions,
-	MessagePayload,
-	TextBasedChannel
-} from "discord.js";
+import { Message, BaseMessageOptions, MessagePayload, TextBasedChannel } from "discord.js";
 
 /**
  * 在指定頻道中發送訊息，並在特定秒數後刪除，如果秒數是負數則不會刪除該訊息

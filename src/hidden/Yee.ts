@@ -11,12 +11,6 @@ export default class Yee extends HiddenCommand {
 	}
 
 	public execute(message: Message): boolean {
-		return this.rareResponse(
-			message,
-			["yeee"],
-			["yeeeeeeee"],
-			["yEEEEeEEeEeeEeE"],
-			["YĒÊêềËĔËëëĒĕÈèēÉé"]
-		);
+		return this.rareResponse(message, ["yeee"], ["yeeeeeeee"], ["yEEEEeEEeEeeEeE"], ["YĒÊêềËĔËëëĒĕÈèēÉé"]);
 	}
 }

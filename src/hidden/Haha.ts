@@ -10,20 +10,7 @@ export default class Haha extends HiddenCommand {
 		return /^[哈呵ㄏ]+$/.test(message.content);
 	}
 
-	private r1 = [
-		"哈",
-		"哈哈",
-		"哈哈哈",
-		"呵",
-		"呵呵",
-		"呵呵呵",
-		"ㄏ",
-		"ㄏㄏ",
-		"ㄏㄏㄏ",
-		"w",
-		"www",
-		"www"
-	];
+	private r1 = ["哈", "哈哈", "哈哈哈", "呵", "呵呵", "呵呵呵", "ㄏ", "ㄏㄏ", "ㄏㄏㄏ", "w", "www", "www"];
 	private r2 = ["你要不要吃……哈…呵伊阿…"];
 
 	public execute(message: Message): boolean {

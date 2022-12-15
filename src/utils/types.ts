@@ -1,10 +1,4 @@
-import {
-	ApplicationCommandOptionData,
-	ApplicationCommandSubCommandData,
-	ApplicationCommandSubGroupData,
-	Collection,
-	PermissionFlags
-} from "discord.js";
+import { ApplicationCommandOptionData, ApplicationCommandSubCommandData, ApplicationCommandSubGroupData, Collection, PermissionFlags } from "discord.js";
 import { Client as Osu } from "@hizollo/osu-api";
 import { AutocompleteManager } from "../classes/AutocompleteManager";
 import { ButtonManager } from "../classes/ButtonManager";
@@ -15,11 +9,7 @@ import { HZNetwork } from "../classes/HZNetwork";
 import { ClientMusicManager } from "../classes/Music/Model/ClientMusicManager";
 import { SelectMenuManager } from "../classes/SelectMenuManager";
 import { WebhookLogger } from "../classes/WebhookLogger";
-import {
-	ArgumentParseType,
-	CommandManagerRejectReason,
-	CommandOptionType
-} from "./enums";
+import { ArgumentParseType, CommandManagerRejectReason, CommandOptionType } from "./enums";
 import {
 	CommandParserOptionFailWithChoicesResult,
 	CommandParserOptionFailWithLimitResult,
@@ -39,19 +29,11 @@ export type CommandParserOptionResult =
 	| CommandParserOptionFailWithChoicesResult
 	| CommandParserOptionFailWithLimitResult;
 
-export type CommandParserPassResult = { args: unknown[] } & Omit<
-	CommandParserOptionPassResult,
-	"arg"
->;
+export type CommandParserPassResult = { args: unknown[] } & Omit<CommandParserOptionPassResult, "arg">;
 
-export type CommandParserFailResult = { index: number } & Exclude<
-	CommandParserOptionResult,
-	CommandParserOptionPassResult
->;
+export type CommandParserFailResult = { index: number } & Exclude<CommandParserOptionResult, CommandParserOptionPassResult>;
 
-export type CommandParserResult =
-	| CommandParserPassResult
-	| CommandParserFailResult;
+export type CommandParserResult = CommandParserPassResult | CommandParserFailResult;
 
 export type CommandManagerRejectInfo =
 	| { reason: CommandManagerRejectReason.Angry; args: [time: number] }
@@ -68,17 +50,13 @@ export type CommandManagerRejectInfo =
 	| { reason: CommandManagerRejectReason.InNetwork; args: [] }
 	| {
 			reason: CommandManagerRejectReason.IllegalArgument;
-			args: [
-				commandName: [string, string | undefined],
-				commandOptions: HZCommandOptionData[],
-				result: CommandParserFailResult
-			];
+			args: [commandName: [string, string | undefined], commandOptions: HZCommandOptionData[], result: CommandParserFailResult];
 	  };
 
-export type HZCommandOptionData = Exclude<
-	ApplicationCommandOptionData,
-	ApplicationCommandSubCommandData | ApplicationCommandSubGroupData
-> & { parseAs?: CommandOptionType; repeat?: boolean };
+export type HZCommandOptionData = Exclude<ApplicationCommandOptionData, ApplicationCommandSubCommandData | ApplicationCommandSubGroupData> & {
+	parseAs?: CommandOptionType;
+	repeat?: boolean;
+};
 
 export type ArgumentParseMethod =
 	| { type: ArgumentParseType.None }
@@ -90,9 +68,7 @@ export type AutocompleteData = {
 	[key: string]: { name: string; devOnly?: boolean }[];
 };
 
-export type PageSystemOptions =
-	| PageSystemDescriptionOptions
-	| PageSystemEmbedFieldOptions;
+export type PageSystemOptions = PageSystemDescriptionOptions | PageSystemEmbedFieldOptions;
 
 export type ThrowBallType = "棒球" | "保齡球" | "乒乓球" | "巧克力球";
 
@@ -213,19 +189,9 @@ declare module "discord.js" {
 	}
 
 	interface EmbedBuilder {
-		applyHiZolloSettings: (
-			member: GuildMember | null,
-			authorText: string,
-			footerText?: string
-		) => EmbedBuilder;
-		setMemberAuthor: (
-			member: GuildMember | null,
-			authorText: string
-		) => EmbedBuilder;
-		setMemberFooter: (
-			member: GuildMember | null,
-			footerText?: string
-		) => EmbedBuilder;
+		applyHiZolloSettings: (member: GuildMember | null, authorText: string, footerText?: string) => EmbedBuilder;
+		setMemberAuthor: (member: GuildMember | null, authorText: string) => EmbedBuilder;
+		setMemberFooter: (member: GuildMember | null, footerText?: string) => EmbedBuilder;
 		setUserAuthor: (user: User | null, authorText: string) => EmbedBuilder;
 		setUserFooter: (user: User | null, footerText?: string) => EmbedBuilder;
 		setHiZolloColor: () => EmbedBuilder;

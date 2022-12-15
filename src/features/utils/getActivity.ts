@@ -9,14 +9,9 @@ import randomElement from "./randomElement";
  * @returns 隨機動態
  */
 export default async function getActivity(client: Client): Promise<string> {
-	const guildCounts = (await client.shard
-		?.fetchClientValues("guilds.cache.size")
-		.catch(() => {})) as number[] | undefined;
+	const guildCounts = (await client.shard?.fetchClientValues("guilds.cache.size").catch(() => {})) as number[] | undefined;
 	if (guildCounts) {
-		const guildCount = guildCounts.reduce(
-			(acc, guildsize) => acc + guildsize,
-			0
-		);
+		const guildCount = guildCounts.reduce((acc, guildsize) => acc + guildsize, 0);
 		activities.push(`在 ${guildCount} 個伺服器中提供服務`);
 	}
 	const activity = randomElement(activities);

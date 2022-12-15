@@ -11,12 +11,6 @@ export default class Noword extends HiddenCommand {
 	}
 
 	public execute(message: Message): boolean {
-		return this.rareResponse(
-			message,
-			["......."],
-			["......."],
-			["......."],
-			["。。。。。。。"]
-		);
+		return this.rareResponse(message, ["......."], ["......."], ["......."], ["。。。。。。。"]);
 	}
 }

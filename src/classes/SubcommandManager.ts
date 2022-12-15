@@ -41,10 +41,7 @@ export class SubcommandManager {
 		for (const subcommandFile of subcommandFiles) {
 			if (!subcommandFile.endsWith(".js")) continue;
 
-			const C: new () => Command = require(path.join(
-				dirPath,
-				subcommandFile
-			)).default;
+			const C: new () => Command = require(path.join(dirPath, subcommandFile)).default;
 			const instance = new C();
 			group.set(instance.name, instance);
 		}
@@ -63,50 +60,25 @@ export class SubcommandManager {
 	 * @param commandName 要搜尋的指令名稱，支援捷徑用法
 	 * @returns 找到的指令或指令群
 	 */
-	public search(
-		commandName: [string, string | undefined]
-	): Command | SubcommandGroup | void {
+	public search(commandName: [string, string | undefined]): Command | SubcommandGroup | void {
 		const first = commandName[0].toLowerCase();
 		const second = commandName[1]?.toLowerCase();
 
 		// 先找群組
-		const group =
-			this.data.get(first) ||
-			this.data.find(g => !!g.aliases?.includes(first));
+		const group = this.data.get(first) || this.data.find(g => !!g.aliases?.includes(first));
 		if (group) {
-			return second
-				? group.data.get(second) ||
-						group.data.find(c => !!c.aliases?.includes(second))
-				: group;
+			return second ? group.data.get(second) || group.data.find(c => !!c.aliases?.includes(second)) : group;
 		}
 
 		// 再找捷徑，假設沒有 collision
-		return this.data
-			.map(
-				({ data }) =>
-					data.get(first) ||
-					data.find(c => !!c.aliases?.includes(first))
-			)
-			.find(c => c);
+		return this.data.map(({ data }) => data.get(first) || data.find(c => !!c.aliases?.includes(first))).find(c => c);
 	}
 
-	public each(
-		fn: (
-			value: SubcommandGroup,
-			key: string,
-			collection: Collection<string, SubcommandGroup>
-		) => void
-	): Collection<string, SubcommandGroup> {
+	public each(fn: (value: SubcommandGroup, key: string, collection: Collection<string, SubcommandGroup>) => void): Collection<string, SubcommandGroup> {
 		return this.data.each(fn);
 	}
 
-	public map<T>(
-		fn: (
-			value: SubcommandGroup,
-			key: string,
-			collection: Collection<string, SubcommandGroup>
-		) => T
-	): T[] {
+	public map<T>(fn: (value: SubcommandGroup, key: string, collection: Collection<string, SubcommandGroup>) => T): T[] {
 		return this.data.map(fn);
 	}
 }

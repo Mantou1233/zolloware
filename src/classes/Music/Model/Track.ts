@@ -91,16 +91,12 @@ export class Track {
 		this.videoLink = `[${this.title}](${this.url})`;
 		this.description = info.video_details.description ?? "[無影片描述]";
 		this.views = info.video_details.views;
-		this.thumbnailUrl = this.getMaxThumbnail(
-			info.video_details.thumbnails
-		).url;
+		this.thumbnailUrl = this.getMaxThumbnail(info.video_details.thumbnails).url;
 		this.length = info.video_details.durationInSec;
 
 		this.channelLink =
 			info.video_details.channel && info.video_details.channel.url
-				? `[${info.video_details.channel.name ?? "無法取得頻道名稱"}](${
-						info.video_details.channel.url
-				  })`
+				? `[${info.video_details.channel.name ?? "無法取得頻道名稱"}](${info.video_details.channel.url})`
 				: "[無法取得頻道資料]";
 		this.uploadedAt = info.video_details.uploadedAt ?? "[無法取得上傳時間]";
 	}
@@ -110,8 +106,7 @@ export class Track {
 	 */
 	public async renewResource() {
 		const stream = await YoutubeUtil.getStream(this.info.video_details.url);
-		if (!stream)
-			throw new Error(`Invalid url ${this.info.video_details.url}`);
+		if (!stream) throw new Error(`Invalid url ${this.info.video_details.url}`);
 
 		this.resource = createAudioResource(stream.stream, {
 			inputType: stream.type

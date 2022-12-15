@@ -12,12 +12,9 @@ export class Translator extends null {
 	 * @param commandName 由群組名稱及指令名稱構成的群組指令全名
 	 * @returns 捷徑名稱
 	 */
-	static getZShortcut([groupName, commandname]: [string, string]):
-		| string
-		| void {
+	static getZShortcut([groupName, commandname]: [string, string]): string | void {
 		if (!(groupName in this.ZShortcut)) return;
-		const nextLayer =
-			this.ZShortcut[groupName as keyof typeof this.ZShortcut];
+		const nextLayer = this.ZShortcut[groupName as keyof typeof this.ZShortcut];
 
 		if (!(commandname in nextLayer)) return;
 		return nextLayer[commandname as keyof typeof nextLayer];
@@ -30,13 +27,9 @@ export class Translator extends null {
 	 */
 	static getCommandName(zShortcut: string): [string, string] | void {
 		for (const groupName in this.ZShortcut) {
-			const nextLayer =
-				this.ZShortcut[groupName as keyof typeof this.ZShortcut];
+			const nextLayer = this.ZShortcut[groupName as keyof typeof this.ZShortcut];
 			for (const commandName in nextLayer) {
-				if (
-					nextLayer[commandName as keyof typeof nextLayer] ===
-					zShortcut
-				) {
+				if (nextLayer[commandName as keyof typeof nextLayer] === zShortcut) {
 					return [groupName, commandName];
 				}
 			}
@@ -48,17 +41,11 @@ export class Translator extends null {
 	 * @param input 任意字串
 	 * @returns 權限的中文名稱
 	 */
-	static getPermissionChinese(
-		input: keyof typeof this.PermissionChinese
-	): string;
-	static getPermissionChinese(
-		input: Exclude<string, keyof typeof this.PermissionChinese>
-	): void;
+	static getPermissionChinese(input: keyof typeof this.PermissionChinese): string;
+	static getPermissionChinese(input: Exclude<string, keyof typeof this.PermissionChinese>): void;
 	static getPermissionChinese(input: string): string | void {
 		if (!(input in this.PermissionChinese)) return;
-		return this.PermissionChinese[
-			input as keyof typeof this.PermissionChinese
-		];
+		return this.PermissionChinese[input as keyof typeof this.PermissionChinese];
 	}
 
 	/**
@@ -137,8 +124,7 @@ export class Translator extends null {
 		/* (1 << 14) */ EMBED_LINKS: "嵌入連結",
 		/* (1 << 15) */ ATTACH_FILES: "附加檔案",
 		/* (1 << 16) */ READ_MESSAGE_HISTORY: "讀取訊息歷史",
-		/* (1 << 17) */ MENTION_EVERYONE:
-			"提及 @\u200beveryone、@\u200bhere 和所有身分組",
+		/* (1 << 17) */ MENTION_EVERYONE: "提及 @\u200beveryone、@\u200bhere 和所有身分組",
 		/* (1 << 18) */ USE_EXTERNAL_EMOJIS: "使用外部表情符號",
 		/* (1 << 19) */ VIEW_GUILD_INSIGHTS: "檢視 Server Insights",
 		/* (1 << 20) */ CONNECT: "連接",
@@ -209,19 +195,18 @@ export class Translator extends null {
 	/**
 	 * 指令分類－中文名稱對照表
 	 */
-	static readonly CommandTypeChinese: { [key in CommandType]: string } =
-		Object.freeze({
-			[CommandType.Contact]: "聯繫",
-			[CommandType.Developer]: "開發者專用",
-			[CommandType.Fun]: "娛樂",
-			[CommandType.SinglePlayerGame]: "單人遊戲",
-			[CommandType.MultiPlayerGame]: "多人遊戲",
-			[CommandType.Information]: "資訊",
-			[CommandType.Miscellaneous]: "雜項",
-			[CommandType.Network]: "聯絡網",
-			[CommandType.SubcommandGroup]: "指令群",
-			[CommandType.Utility]: "功能"
-		});
+	static readonly CommandTypeChinese: { [key in CommandType]: string } = Object.freeze({
+		[CommandType.Contact]: "聯繫",
+		[CommandType.Developer]: "開發者專用",
+		[CommandType.Fun]: "娛樂",
+		[CommandType.SinglePlayerGame]: "單人遊戲",
+		[CommandType.MultiPlayerGame]: "多人遊戲",
+		[CommandType.Information]: "資訊",
+		[CommandType.Miscellaneous]: "雜項",
+		[CommandType.Network]: "聯絡網",
+		[CommandType.SubcommandGroup]: "指令群",
+		[CommandType.Utility]: "功能"
+	});
 
 	/**
 	 * 指令分類－中文描述對照表
@@ -232,8 +217,7 @@ export class Translator extends null {
 		[CommandType.Contact]: "與 HiZollo 的開發者聯絡",
 		[CommandType.Developer]: "開發者專用指令",
 		[CommandType.Fun]: "適合在聊天室跟朋友玩樂",
-		[CommandType.SinglePlayerGame]:
-			"讓你在沒人的凌晨三點邊吃美味蟹堡邊玩遊戲",
+		[CommandType.SinglePlayerGame]: "讓你在沒人的凌晨三點邊吃美味蟹堡邊玩遊戲",
 		[CommandType.MultiPlayerGame]: "跟伺服器上的夥伴一起玩遊戲",
 		[CommandType.Information]: "顯示 HiZollo 的相關資訊",
 		[CommandType.Miscellaneous]: "開發者懶得分類的指令",

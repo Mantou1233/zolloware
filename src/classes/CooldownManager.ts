@@ -1,7 +1,4 @@
-import {
-	CooldownManagerAddUserOptions,
-	CooldownManagerMethodOptions
-} from "../utils/interfaces";
+import { CooldownManagerAddUserOptions, CooldownManagerMethodOptions } from "../utils/interfaces";
 import { HZClient } from "./HZClient";
 
 /**
@@ -49,18 +46,9 @@ export default class CooldownManager {
 	 * @param create 是否在找不到冷卻表時新建一個
 	 * @returns 冷卻表
 	 */
-	public getCommandList(
-		commandName: string,
-		create: true
-	): Map<string, number>;
-	public getCommandList(
-		commandName: string,
-		create: false
-	): Map<string, number> | void;
-	public getCommandList(
-		commandName: string,
-		create: boolean
-	): Map<string, number> | void {
+	public getCommandList(commandName: string, create: true): Map<string, number>;
+	public getCommandList(commandName: string, create: false): Map<string, number> | void;
+	public getCommandList(commandName: string, create: boolean): Map<string, number> | void {
 		const list = this.data.get(commandName);
 		if (!list && create) {
 			return this.addCommandList(commandName);
@@ -72,11 +60,7 @@ export default class CooldownManager {
 	 * 新增一位使用者到指定指令的冷卻表中，這個操作只會對單個分支進行
 	 * @param options
 	 */
-	public addUser({
-		commandName,
-		userId,
-		duration = CooldownManager.DefaultCooldown
-	}: CooldownManagerAddUserOptions): void {
+	public addUser({ commandName, userId, duration = CooldownManager.DefaultCooldown }: CooldownManagerAddUserOptions): void {
 		if (duration === 0) return;
 		const list = this.getCommandList(commandName, true);
 		list.set(userId, Date.now() + duration * 1000);
@@ -90,12 +74,8 @@ export default class CooldownManager {
 	 * @param options
 	 * @returns 是否成功將使用者移除
 	 */
-	public async removeUser({
-		commandName,
-		userId
-	}: CooldownManagerMethodOptions): Promise<boolean> {
-		if (!this.client.shard)
-			return this._removeUser({ commandName, userId });
+	public async removeUser({ commandName, userId }: CooldownManagerMethodOptions): Promise<boolean> {
+		if (!this.client.shard) return this._removeUser({ commandName, userId });
 
 		const result = await this.client.shard.broadcastEval(
 			(client, { commandName, userId }) => {
@@ -111,10 +91,7 @@ export default class CooldownManager {
 	 * @param options
 	 * @returns 剩餘冷卻時間，單位為毫秒
 	 */
-	public async checkUser({
-		commandName,
-		userId
-	}: CooldownManagerMethodOptions): Promise<number> {
+	public async checkUser({ commandName, userId }: CooldownManagerMethodOptions): Promise<number> {
 		const now = Date.now();
 		if (!this.client.shard) {
 			const endTime = this._checkUser({ commandName, userId });
@@ -143,10 +120,7 @@ export default class CooldownManager {
 	 * @param options
 	 * @returns 是否成功將使用者移除
 	 */
-	private _removeUser({
-		commandName,
-		userId
-	}: CooldownManagerMethodOptions): boolean {
+	private _removeUser({ commandName, userId }: CooldownManagerMethodOptions): boolean {
 		const list = this.data.get(commandName);
 		return !!list?.delete(userId);
 	}

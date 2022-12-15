@@ -1,14 +1,5 @@
-import {
-	AudioPlayerStatus,
-	entersState,
-	joinVoiceChannel,
-	VoiceConnectionStatus
-} from "@discordjs/voice";
-import {
-	GuildTextBasedChannel,
-	VoiceBasedChannel,
-	VoiceState
-} from "discord.js";
+import { AudioPlayerStatus, entersState, joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
+import { GuildTextBasedChannel, VoiceBasedChannel, VoiceState } from "discord.js";
 import { HZClient } from "../../../classes/HZClient";
 import { Source } from "../../../classes/Source";
 import { MusicViewRenderer } from "../View/MusicViewRenderer";
@@ -67,13 +58,7 @@ export class ClientMusicManager {
 	 * @param fn 操作函式
 	 * @returns 由函式回傳值組成的陣列
 	 */
-	public map<T>(
-		fn: (
-			value: GuildMusicManager,
-			key: string,
-			map: Map<string, GuildMusicManager>
-		) => T
-	): T[] {
+	public map<T>(fn: (value: GuildMusicManager, key: string, map: Map<string, GuildMusicManager>) => T): T[] {
 		const iter = this.guilds.entries();
 		return Array.from({ length: this.guilds.size }, (): T => {
 			const [key, value] = iter.next().value;
@@ -87,13 +72,8 @@ export class ClientMusicManager {
 	 * @param textChannel 要綁定的文字頻道，所有音樂系統的訊息都會傳送到這裡
 	 * @param autoSuppress 是否在閒置時自動退下舞台（僅舞台頻道中有作用）
 	 */
-	public join(
-		voiceChannel: VoiceBasedChannel,
-		textChannel: GuildTextBasedChannel,
-		autoSuppress: boolean
-	): void {
-		if (!voiceChannel.joinable)
-			throw new Error("The voice channel is not joinable.");
+	public join(voiceChannel: VoiceBasedChannel, textChannel: GuildTextBasedChannel, autoSuppress: boolean): void {
+		if (!voiceChannel.joinable) throw new Error("The voice channel is not joinable.");
 
 		const connection = joinVoiceChannel({
 			channelId: voiceChannel.id,
@@ -116,16 +96,8 @@ export class ClientMusicManager {
 		connection.on(VoiceConnectionStatus.Disconnected, async () => {
 			try {
 				await Promise.race([
-					entersState(
-						connection,
-						VoiceConnectionStatus.Signalling,
-						5e3
-					),
-					entersState(
-						connection,
-						VoiceConnectionStatus.Connecting,
-						5e3
-					)
+					entersState(connection, VoiceConnectionStatus.Signalling, 5e3),
+					entersState(connection, VoiceConnectionStatus.Connecting, 5e3)
 				]);
 			} catch (error) {
 				this.leave(voiceChannel.guild.id);
@@ -213,22 +185,15 @@ export class ClientMusicManager {
 	 * @param oldState 舊的語音狀態
 	 * @param newState 新的語音狀態
 	 */
-	public onVoiceStateUpdate(
-		oldState: VoiceState,
-		newState: VoiceState
-	): void {
+	public onVoiceStateUpdate(oldState: VoiceState, newState: VoiceState): void {
 		if (!this.has(oldState.guild.id)) return;
 
 		// 只留下離開音樂頻道（oldId -> null），或是切換音樂頻道（oldId -> newId）的情形
-		if (!oldState.channelId || oldState.channelId === newState.channelId)
-			return;
+		if (!oldState.channelId || oldState.channelId === newState.channelId) return;
 
 		const manager = this.get(oldState.guild.id)!;
 
-		if (
-			newState.channel &&
-			newState.channel?.id !== manager.voiceChannel.id
-		) {
+		if (newState.channel && newState.channel?.id !== manager.voiceChannel.id) {
 			manager.voiceChannel = newState.channel;
 		}
 

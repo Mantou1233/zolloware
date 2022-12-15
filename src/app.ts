@@ -6,19 +6,11 @@
  *************************************************************************/
 
 /******************* 系統變數設置 *******************/
-import {
-	ApplicationCommandOptionType,
-	EmbedBuilder,
-	GatewayIntentBits,
-	Options
-} from "discord.js";
+import { ApplicationCommandOptionType, EmbedBuilder, GatewayIntentBits, Options } from "discord.js";
 import "./djsAddon";
 import config from "@root/config";
 import { HZClient } from "./classes/HZClient";
-import {
-	CommandManagerRejectReason,
-	CommandParserOptionResultStatus
-} from "./utils/enums";
+import { CommandManagerRejectReason, CommandParserOptionResultStatus } from "./utils/enums";
 const client = new HZClient({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -54,40 +46,21 @@ import { Translator } from "./classes/Translator";
 /******************* 指令失敗 *******************/
 client.commands.on("reject", async (source, info) => {
 	await source.defer({ ephemeral: true });
-	const helper = new EmbedBuilder().applyHiZolloSettings(
-		source.member,
-		"HiZollo 的幫助中心"
-	);
+	const helper = new EmbedBuilder().applyHiZolloSettings(source.member, "HiZollo 的幫助中心");
 
 	switch (info.reason) {
 		case CommandManagerRejectReason.Angry:
-			helper
-				.setTitle("(ﾒﾟДﾟ)ﾒ")
-				.setDescription(
-					`你就是剛剛丟我的那個人！我才不想理你勒，你 ${~~(
-						info.args[0] / 1000
-					)} 秒之後再來跟我談！`
-				);
+			helper.setTitle("(ﾒﾟДﾟ)ﾒ").setDescription(`你就是剛剛丟我的那個人！我才不想理你勒，你 ${~~(info.args[0] / 1000)} 秒之後再來跟我談！`);
 			break;
 
 		case CommandManagerRejectReason.TwoFactorRequird:
-			helper
-				.setTitle("2FA 不讓我執行這個指令")
-				.setDescription(
-					`因為這個伺服器開啟了 2FA 驗證，所以我無法執行這個指令`
-				);
+			helper.setTitle("2FA 不讓我執行這個指令").setDescription(`因為這個伺服器開啟了 2FA 驗證，所以我無法執行這個指令`);
 			break;
 
 		case CommandManagerRejectReason.UserMissingPermission:
 			helper
 				.setTitle("你被權限之神禁錮了")
-				.setDescription(
-					`以下是你缺少的權限\n\n${info.args[0]
-						.map(
-							perm => `- ${Translator.getPermissionChinese(perm)}`
-						)
-						.join("\n")}`
-				);
+				.setDescription(`以下是你缺少的權限\n\n${info.args[0].map(perm => `- ${Translator.getPermissionChinese(perm)}`).join("\n")}`);
 			break;
 
 		case CommandManagerRejectReason.BotMissingPermission:
@@ -95,27 +68,17 @@ client.commands.on("reject", async (source, info) => {
 				.setTitle("給我這麼點權限怎麼夠我用")
 				.setDescription(
 					`我把我要的權限都列出來了，快點給我不然我沒辦法幫你執行這個指令\n\n${info.args[0]
-						.map(
-							perm => `- ${Translator.getPermissionChinese(perm)}`
-						)
+						.map(perm => `- ${Translator.getPermissionChinese(perm)}`)
 						.join("\n")}`
 				);
 			break;
 
 		case CommandManagerRejectReason.InCooldown:
-			helper
-				.setTitle("你太快了")
-				.setDescription(
-					`你必須在 ${~~(info.args[0] / 1000)} 秒後才能再使用此指令。`
-				);
+			helper.setTitle("你太快了").setDescription(`你必須在 ${~~(info.args[0] / 1000)} 秒後才能再使用此指令。`);
 			break;
 
 		case CommandManagerRejectReason.InNetwork:
-			helper
-				.setTitle("這個地方不適合使用指令")
-				.setDescription(
-					"在 HiZollo Network 的領域裡使用指令會發生相當嚴重的時空錯亂，你不會希望這件事發生的"
-				);
+			helper.setTitle("這個地方不適合使用指令").setDescription("在 HiZollo Network 的領域裡使用指令會發生相當嚴重的時空錯亂，你不會希望這件事發生的");
 			break;
 
 		case CommandManagerRejectReason.IllegalArgument:
@@ -126,28 +89,16 @@ client.commands.on("reject", async (source, info) => {
 					const text = o.repeat
 						? new Array(2)
 								.fill(o.name)
-								.map((e, i) =>
-									e.replaceAll("%i", (i + 1).toString())
-								)
+								.map((e, i) => e.replaceAll("%i", (i + 1).toString()))
 								.join(" ") + " ..."
 						: o.name;
-					const indexRange = o.repeat
-						? source.isMessage()
-							? Infinity
-							: 5
-						: 0;
-					return index <= i && i <= index + indexRange
-						? `[${text}]`
-						: text;
+					const indexRange = o.repeat ? (source.isMessage() ? Infinity : 5) : 0;
+					return index <= i && i <= index + indexRange ? `[${text}]` : text;
 				})
 				.join(" ");
-			description = `\`\`\`css\n/${commandName[0]}${
-				commandName[1] ? ` ${commandName[1]}` : ""
-			} ${description}\n\`\`\`\n`;
+			description = `\`\`\`css\n/${commandName[0]}${commandName[1] ? ` ${commandName[1]}` : ""} ${description}\n\`\`\`\n`;
 
-			const displayName = options[index].repeat
-				? options[index].name.replaceAll("%i", "")
-				: options[index].name;
+			const displayName = options[index].repeat ? options[index].name.replaceAll("%i", "") : options[index].name;
 			let limit: number;
 			switch (status) {
 				case CommandParserOptionResultStatus.Required:
@@ -156,14 +107,8 @@ client.commands.on("reject", async (source, info) => {
 
 				case CommandParserOptionResultStatus.WrongFormat:
 					helper.setTitle(`參數 ${displayName} 的格式錯誤`);
-					description += `${arg} 不符合${Translator.getCommandOptionTypeChinese(
-						options[index]
-					)}`;
-					if (
-						options[index].type ===
-						ApplicationCommandOptionType.Boolean
-					)
-						description += `（是或否）`;
+					description += `${arg} 不符合${Translator.getCommandOptionTypeChinese(options[index])}`;
+					if (options[index].type === ApplicationCommandOptionType.Boolean) description += `（是或否）`;
 					description += `的格式`;
 					break;
 
@@ -171,11 +116,7 @@ client.commands.on("reject", async (source, info) => {
 					if (!("choices" in info.args[2])) break;
 					const { choices } = info.args[2];
 					const choicesString = choices
-						.map(({ name: n, value: v }) =>
-							n === v.toString()
-								? `\`${n}\``
-								: `\`${n}\`/\`${v}\``
-						)
+						.map(({ name: n, value: v }) => (n === v.toString() ? `\`${n}\`` : `\`${n}\`/\`${v}\``))
 						.flat()
 						.join("．");
 					helper.setTitle(`${arg} 並不在規定的選項內`);
@@ -200,18 +141,14 @@ client.commands.on("reject", async (source, info) => {
 					if (!("limit" in info.args[2])) break;
 					({ limit } = info.args[2]);
 					helper.setTitle(`參數 ${displayName} 太短了`);
-					description += `這個參數的長度必須比 ${limit} 還要長，但你給的 ${arg} 的長度只有 ${
-						(arg as string).length
-					}`;
+					description += `這個參數的長度必須比 ${limit} 還要長，但你給的 ${arg} 的長度只有 ${(arg as string).length}`;
 					break;
 
 				case CommandParserOptionResultStatus.LengthTooLong:
 					if (!("limit" in info.args[2])) break;
 					({ limit } = info.args[2]);
 					helper.setTitle(`參數 ${displayName} 太長了`);
-					description += `這個參數的長度必須比 ${limit} 還要短，但你給的 ${arg} 的長度卻是 ${
-						(arg as string).length
-					}`;
+					description += `這個參數的長度必須比 ${limit} 還要短，但你給的 ${arg} 的長度卻是 ${(arg as string).length}`;
 					break;
 			}
 			helper.setDescription(description);
@@ -225,9 +162,7 @@ client.commands.on("reject", async (source, info) => {
 /******************* 指令無效 *******************/
 client.commands.on("unavailable", async source => {
 	await source.defer({ ephemeral: true });
-	await source.temp(
-		"這個指令目前無法使用，這通常是因為這個指令正在更新，稍待片刻後就能正常使用了"
-	);
+	await source.temp("這個指令目前無法使用，這通常是因為這個指令正在更新，稍待片刻後就能正常使用了");
 });
 /**/
 

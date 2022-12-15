@@ -7,9 +7,7 @@ const manager = new ShardingManager("./dist/src/app.js", {
 	shardArgs: shardArgs
 });
 
-manager.on("shardCreate", shard =>
-	console.log(`編號 ${shard.id} 的分支已開始運作`)
-);
+manager.on("shardCreate", shard => console.log(`編號 ${shard.id} 的分支已開始運作`));
 
 manager.spawn({ timeout: -1 }).then(() => {
 	console.log("分支已全數上線");
@@ -30,8 +28,6 @@ function cleanShards() {
 		});
 		console.log("所有分支都確實結束");
 	} catch {
-		console.log(
-			"出現異常\n如果你在這條訊息前有看到「所有分支都確實結束」，就代表這條訊息是多餘的，沒有任何異常"
-		);
+		console.log("出現異常\n如果你在這條訊息前有看到「所有分支都確實結束」，就代表這條訊息是多餘的，沒有任何異常");
 	}
 }

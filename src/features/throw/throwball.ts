@@ -17,22 +17,14 @@ const responses = Object.freeze({
 	保齡球: bowling
 });
 
-export default function throwball(
-	client: Client,
-	pitcher: GuildMember,
-	target: GuildMember,
-	ballType: ThrowBallType
-): string {
+export default function throwball(client: Client, pitcher: GuildMember, target: GuildMember, ballType: ThrowBallType): string {
 	let result: string;
 	const array = responses[ballType];
 	if (target.id === client.user?.id) {
 		if (randomInt(1, 5) === 1) {
 			result = "你為什麼要丟我 QQ，不跟你好了啦";
 			client.angryList.set(pitcher.id, Date.now() + angryTimespan);
-			setTimeout(
-				() => client.angryList.delete(pitcher.id),
-				angryTimespan
-			);
+			setTimeout(() => client.angryList.delete(pitcher.id), angryTimespan);
 		} else result = randomElement(array.hz);
 	} else if (target.id === pitcher.id) result = randomElement(array.self);
 	else result = throwMessage(array);

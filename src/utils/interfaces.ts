@@ -20,11 +20,7 @@ import { HZClient } from "../classes/HZClient";
 import { Source } from "../classes/Source";
 import { GuildMusicManager } from "../classes/Music/Model/GuildMusicManager";
 import { MusicViewRenderer } from "../classes/Music/View/MusicViewRenderer";
-import {
-	CommandParserOptionResultStatus,
-	CommandType,
-	PageSystemMode
-} from "./enums";
+import { CommandParserOptionResultStatus, CommandType, PageSystemMode } from "./enums";
 import { ArgumentParseMethod, HZCommandOptionData } from "./types";
 import { Command } from "../classes/Command";
 
@@ -51,11 +47,7 @@ export interface HZNetworkEvents {
 
 export interface CommandManagerEvents {
 	error: [commandName: string, error: Error];
-	executed: [
-		source: Source,
-		commandName: [string, string | undefined],
-		args: unknown[]
-	];
+	executed: [source: Source, commandName: [string, string | undefined], args: unknown[]];
 	loaded: [];
 	unavailable: [source: Source];
 }
@@ -68,26 +60,20 @@ export interface CommandParserOptionBaseResult {
 	arg: unknown;
 }
 
-export interface CommandParserOptionPassResult
-	extends CommandParserOptionBaseResult {
+export interface CommandParserOptionPassResult extends CommandParserOptionBaseResult {
 	status: CommandParserOptionResultStatus.Pass;
 }
 
-export interface CommandParserOptionFailWithPureStatusResult
-	extends CommandParserOptionBaseResult {
-	status:
-		| CommandParserOptionResultStatus.Required
-		| CommandParserOptionResultStatus.WrongFormat;
+export interface CommandParserOptionFailWithPureStatusResult extends CommandParserOptionBaseResult {
+	status: CommandParserOptionResultStatus.Required | CommandParserOptionResultStatus.WrongFormat;
 }
 
-export interface CommandParserOptionFailWithChoicesResult
-	extends CommandParserOptionBaseResult {
+export interface CommandParserOptionFailWithChoicesResult extends CommandParserOptionBaseResult {
 	status: CommandParserOptionResultStatus.NotInChoices;
 	choices: ApplicationCommandOptionChoiceData[];
 }
 
-export interface CommandParserOptionFailWithLimitResult
-	extends CommandParserOptionBaseResult {
+export interface CommandParserOptionFailWithLimitResult extends CommandParserOptionBaseResult {
 	status:
 		| CommandParserOptionResultStatus.ValueTooSmall
 		| CommandParserOptionResultStatus.ValueTooLarge
@@ -122,8 +108,7 @@ export interface CooldownManagerMethodOptions {
 	userId: string;
 }
 
-export interface CooldownManagerAddUserOptions
-	extends CooldownManagerMethodOptions {
+export interface CooldownManagerAddUserOptions extends CooldownManagerMethodOptions {
 	duration?: number;
 }
 

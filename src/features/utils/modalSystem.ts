@@ -11,10 +11,7 @@ import {
 	ModalSubmitInteraction,
 	Collection
 } from "discord.js";
-import {
-	ModelSystemContentOptions,
-	ModelSystemOptions
-} from "../../utils/interfaces";
+import { ModelSystemContentOptions, ModelSystemOptions } from "../../utils/interfaces";
 
 type CustomMessageOptions = Omit<MessageCreateOptions, "flags"> & {
 	fetchReply?: boolean;
@@ -47,9 +44,7 @@ export default async function modelSystem({
 	const modalCustomId = modal.data.custom_id;
 	const { start, success, exit, idle } = getMessageOptions(contents);
 
-	start.components = [
-		new ActionRowBuilder<ButtonBuilder>().addComponents(open, close)
-	];
+	start.components = [new ActionRowBuilder<ButtonBuilder>().addComponents(open, close)];
 	start.fetchReply = true;
 	start.allowedMentions = idle.allowedMentions = { repliedUser: false };
 	success.components = exit.components = idle.components = [];
@@ -76,16 +71,14 @@ export default async function modelSystem({
 		interactionType: InteractionType.ModalSubmit
 	});
 
-	buttonCollector
-		.on("error", console.error)
-		.on("collect", async interaction => {
-			if (interaction.customId === openCustomId) {
-				interaction.showModal(modal);
-			} else {
-				await interaction.update(exit);
-				modalCollector.stop("exit");
-			}
-		});
+	buttonCollector.on("error", console.error).on("collect", async interaction => {
+		if (interaction.customId === openCustomId) {
+			interaction.showModal(modal);
+		} else {
+			await interaction.update(exit);
+			modalCollector.stop("exit");
+		}
+	});
 
 	return new Promise(resolve => {
 		modalCollector
@@ -95,24 +88,18 @@ export default async function modelSystem({
 					await interaction.update(success);
 				}
 			})
-			.once(
-				"end",
-				async (
-					collected: Collection<string, ModalSubmitInteraction>,
-					reason
-				) => {
-					buttonCollector.stop();
-					switch (reason) {
-						case "limit":
-							resolve(collected.first() ?? null);
-							break;
-						case "time":
-							await message.edit(idle);
-						default:
-							resolve(null);
-					}
+			.once("end", async (collected: Collection<string, ModalSubmitInteraction>, reason) => {
+				buttonCollector.stop();
+				switch (reason) {
+					case "limit":
+						resolve(collected.first() ?? null);
+						break;
+					case "time":
+						await message.edit(idle);
+					default:
+						resolve(null);
 				}
-			);
+			});
 	});
 }
 
@@ -121,13 +108,9 @@ export default async function modelSystem({
  * @param contents 給定物件
  * @returns 新物件
  */
-function getMessageOptions(
-	contents: ModelSystemContentOptions
-): Record<keyof ModelSystemContentOptions, CustomMessageOptions> {
+function getMessageOptions(contents: ModelSystemContentOptions): Record<keyof ModelSystemContentOptions, CustomMessageOptions> {
 	// 暫時設成 Partial，實際上所有鍵都會有值對應
-	let messageOptions: Partial<
-		Record<keyof ModelSystemContentOptions, CustomMessageOptions>
-	> = {};
+	let messageOptions: Partial<Record<keyof ModelSystemContentOptions, CustomMessageOptions>> = {};
 
 	for (const key in contents) {
 		messageOptions[key as keyof ModelSystemContentOptions] = {
@@ -135,17 +118,12 @@ function getMessageOptions(
 		};
 	}
 
-	return messageOptions as Record<
-		keyof ModelSystemContentOptions,
-		CustomMessageOptions
-	>;
+	return messageOptions as Record<keyof ModelSystemContentOptions, CustomMessageOptions>;
 }
 
 /**
  * **[Type Guard]** 按鈕是連結按鈕
  */
-function buttonIsLink(
-	button: Partial<APIButtonComponent>
-): button is Partial<APIButtonComponentWithURL> {
+function buttonIsLink(button: Partial<APIButtonComponent>): button is Partial<APIButtonComponentWithURL> {
 	return button.style === ButtonStyle.Link;
 }

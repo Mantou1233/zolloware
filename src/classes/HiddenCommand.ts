@@ -41,16 +41,8 @@ export abstract class HiddenCommand {
 	 * @param epic 彩蛋回應
 	 * @returns 是否成功回應（必定為 `true`）
 	 */
-	protected epicResponse(
-		message: Message,
-		notEpic: (string | MessageCreateOptions)[],
-		epic: (string | MessageCreateOptions)[]
-	): true {
-		message.channel.send(
-			randomInt(1, 1000) <= 2
-				? randomElement(epic)
-				: randomElement(notEpic)
-		);
+	protected epicResponse(message: Message, notEpic: (string | MessageCreateOptions)[], epic: (string | MessageCreateOptions)[]): true {
+		message.channel.send(randomInt(1, 1000) <= 2 ? randomElement(epic) : randomElement(notEpic));
 		return true;
 	}
 
@@ -60,10 +52,7 @@ export abstract class HiddenCommand {
 	 * @param responses 所有回應的集合，參數駐標越大的回應被抽出的機率越低，如果某項參數是 `null`，那抽到該項時不會有任何回應
 	 * @returns 是否成功回應
 	 */
-	protected rareResponse(
-		message: Message,
-		...responses: ((string | MessageCreateOptions)[] | null)[]
-	): boolean {
+	protected rareResponse(message: Message, ...responses: ((string | MessageCreateOptions)[] | null)[]): boolean {
 		return this.randomResponse(message, null, ...responses);
 	}
 
@@ -73,10 +62,7 @@ export abstract class HiddenCommand {
 	 * @param responses 所有回應的集合，參數駐標越大的回應被抽出的機率越低，如果某項參數是 `null`，那抽到該項時不會有任何回應
 	 * @returns 是否成功回應
 	 */
-	protected randomResponse(
-		message: Message,
-		...responses: ((string | MessageCreateOptions)[] | null)[]
-	): boolean {
+	protected randomResponse(message: Message, ...responses: ((string | MessageCreateOptions)[] | null)[]): boolean {
 		const random = Math.random();
 		const mappedRandom = random / (11 - 10 * random);
 		const index = Math.trunc(mappedRandom * responses.length);
@@ -88,10 +74,7 @@ export abstract class HiddenCommand {
 		if (typeof response === "string") {
 			response = response.replaceAll("%u", message.author.toString());
 		} else {
-			response.content = response.content?.replaceAll(
-				"%u",
-				message.author.toString()
-			);
+			response.content = response.content?.replaceAll("%u", message.author.toString());
 		}
 		message.channel.send(response);
 

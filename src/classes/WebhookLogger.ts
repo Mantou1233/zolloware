@@ -1,11 +1,4 @@
-import {
-	EmbedBuilder,
-	Guild,
-	Message,
-	TextChannel,
-	User,
-	WebhookClient
-} from "discord.js";
+import { EmbedBuilder, Guild, Message, TextChannel, User, WebhookClient } from "discord.js";
 import config from "@root/config";
 import constant from "@root/constant.json";
 import { HZClient } from "./HZClient";
@@ -64,11 +57,7 @@ export class WebhookLogger {
 版本：${constant.bot.version}
 本分支目前服務 ${this.client.guilds.cache.size} 個伺服器`;
 
-		this.send(
-			"Log",
-			description,
-			this.client.devMode ? 0xd70000 : 0xff7d7d
-		);
+		this.send("Log", description, this.client.devMode ? 0xd70000 : 0xff7d7d);
 	}
 
 	/**
@@ -127,25 +116,15 @@ ID：${guild.id}
 	 * @param commandName 指令名稱
 	 * @param args 指令參數
 	 */
-	public commandExecuted(
-		source: Source,
-		commandName: [string, string | undefined],
-		...args: unknown[]
-	): void {
-		const description = `${
-			source.isChatInput()
-				? `斜線指令：\`/`
-				: `訊息指令：\`${config.bot.prefix}`
-		}${commandName[0]}${commandName[1] ? ` ${commandName[1]}` : ``}\`
+	public commandExecuted(source: Source, commandName: [string, string | undefined], ...args: unknown[]): void {
+		const description = `${source.isChatInput() ? `斜線指令：\`/` : `訊息指令：\`${config.bot.prefix}`}${commandName[0]}${
+			commandName[1] ? ` ${commandName[1]}` : ``
+		}\`
 執行者：${source.user}
 參數：${args.join(" ")}
 伺服器：${source.guild.id}`;
 
-		this.send(
-			"Log",
-			description,
-			source.isChatInput() ? 0x7dffff : 0x7d7dff
-		);
+		this.send("Log", description, source.isChatInput() ? 0x7dffff : 0x7d7dff);
 	}
 
 	/**
@@ -233,23 +212,10 @@ ID：${guild.id}
 	 * @param description 訊息內容
 	 * @param color 嵌入物件的顏色
 	 */
-	private send(
-		target: "Log" | "Network Log" | "Error Log",
-		description: string,
-		color: number
-	): void {
-		const logger =
-			target === "Log"
-				? this.mainLogger
-				: target === "Network Log"
-				? this.networkLogger
-				: this.errorLogger;
+	private send(target: "Log" | "Network Log" | "Error Log", description: string, color: number): void {
+		const logger = target === "Log" ? this.mainLogger : target === "Network Log" ? this.networkLogger : this.errorLogger;
 		logger.send({
-			embeds: [
-				this.baseEmbed(target)
-					.setColor(color)
-					.setDescription(description)
-			]
+			embeds: [this.baseEmbed(target).setColor(color).setDescription(description)]
 		});
 		if (target === "Log") console.log(description);
 	}

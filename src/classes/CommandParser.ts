@@ -7,11 +7,7 @@ import {
 	MessageMentions
 } from "discord.js";
 import emojiRegex from "emoji-regex";
-import {
-	ArgumentParseType,
-	CommandOptionType,
-	CommandParserOptionResultStatus
-} from "../utils/enums";
+import { ArgumentParseType, CommandOptionType, CommandParserOptionResultStatus } from "../utils/enums";
 import { CommandParserOptionResult, CommandParserResult } from "../utils/types";
 import { ArgumentParseMethod, HZCommandOptionData } from "../utils/types";
 import { Command } from "./Command";
@@ -44,10 +40,7 @@ export class CommandParser extends null {
 	 * @param rawArgs 除去指令前綴與指令名稱的訊息內容
 	 * @returns 解析後的陣列
 	 */
-	static preParseMessageRawArgs(
-		method: ArgumentParseMethod,
-		rawArgs: string
-	): string[] {
+	static preParseMessageRawArgs(method: ArgumentParseMethod, rawArgs: string): string[] {
 		if (!rawArgs.length) return [];
 		switch (method.type) {
 			case ArgumentParseType.None:
@@ -59,16 +52,7 @@ export class CommandParser extends null {
 
 			case ArgumentParseType.Quote:
 				const [left, right] = method.quotes;
-				return (
-					rawArgs
-						.match(
-							new RegExp(
-								`(?<=${left})[\\s\\S]*?(?=${right})`,
-								"g"
-							)
-						)
-						?.filter((_s, i) => ~i & 1) ?? []
-				);
+				return rawArgs.match(new RegExp(`(?<=${left})[\\s\\S]*?(?=${right})`, "g"))?.filter((_s, i) => ~i & 1) ?? [];
 
 			case ArgumentParseType.Custom:
 				return method.func(rawArgs);
@@ -81,33 +65,23 @@ export class CommandParser extends null {
 	 * @param command 使用者觸發的指令
 	 * @returns 解析結果
 	 */
-	static async parseMessageArgs(
-		message: Message,
-		rawArgs: string,
-		command: Command
-	): Promise<CommandParserResult> {
+	static async parseMessageArgs(message: Message, rawArgs: string, command: Command): Promise<CommandParserResult> {
 		if (!command.options) {
 			return { args: [], status: CommandParserOptionResultStatus.Pass };
 		}
 
-		const preParsedArgs = CommandParser.preParseMessageRawArgs(
-			command.argumentParseMethod,
-			rawArgs
-		);
+		const preParsedArgs = CommandParser.preParseMessageRawArgs(command.argumentParseMethod, rawArgs);
 		const attachments = [...message.attachments.values()];
 
 		const args: any = [];
 		for (let i = 0; i < command.options.length; i++) {
 			do {
-				const result: CommandParserOptionResult =
-					await CommandParser.ParseMessageOption[
-						command.options[i].type
-					]({
-						data: command.options[i],
-						message,
-						preParsedArgs,
-						attachments
-					});
+				const result: CommandParserOptionResult = await CommandParser.ParseMessageOption[command.options[i].type]({
+					data: command.options[i],
+					message,
+					preParsedArgs,
+					attachments
+				});
 
 				if (result.status !== CommandParserOptionResultStatus.Pass) {
 					return { index: i, ...result };
@@ -124,10 +98,7 @@ export class CommandParser extends null {
 	 * @param command 使用者觸發的指令
 	 * @returns 解析結果
 	 */
-	static async parseSlashArgs(
-		interaction: ChatInputCommandInteraction<"cached">,
-		command: Command
-	): Promise<CommandParserResult> {
+	static async parseSlashArgs(interaction: ChatInputCommandInteraction<"cached">, command: Command): Promise<CommandParserResult> {
 		if (!command.options) {
 			return { args: [], status: CommandParserOptionResultStatus.Pass };
 		}
@@ -136,17 +107,11 @@ export class CommandParser extends null {
 		for (let i = 0; i < command.options.length; i++) {
 			let repeatIndex = 1;
 			do {
-				const result: CommandParserOptionResult =
-					await CommandParser.ParseSlashOption[
-						command.options[i].type
-					]({
-						interaction,
-						data: command.options[i],
-						optionName: command.options[i].name.replaceAll(
-							"%i",
-							repeatIndex.toString()
-						)
-					});
+				const result: CommandParserOptionResult = await CommandParser.ParseSlashOption[command.options[i].type]({
+					interaction,
+					data: command.options[i],
+					optionName: command.options[i].name.replaceAll("%i", repeatIndex.toString())
+				});
 
 				if (result.status !== CommandParserOptionResultStatus.Pass) {
 					return { index: i, ...result };
@@ -163,17 +128,8 @@ export class CommandParser extends null {
 	 * @param argument 使用者輸入
 	 * @returns 對應選項的 value
 	 */
-	static getChoicesValue(
-		choices: ApplicationCommandOptionChoiceData[],
-		argument: string
-	): string | null {
-		return (
-			choices
-				.find(
-					c => c.name === argument || c.value.toString() === argument
-				)
-				?.value.toString() ?? null
-		);
+	static getChoicesValue(choices: ApplicationCommandOptionChoiceData[], argument: string): string | null {
+		return choices.find(c => c.name === argument || c.value.toString() === argument)?.value.toString() ?? null;
 	}
 
 	/**
@@ -190,9 +146,7 @@ export class CommandParser extends null {
 			const argument = attachments.shift() ?? null;
 			return {
 				arg: null,
-				status: CommandParserOptionResultStatus[
-					!argument && data.required ? "Required" : "Pass"
-				]
+				status: CommandParserOptionResultStatus[!argument && data.required ? "Required" : "Pass"]
 			};
 		},
 
@@ -204,9 +158,7 @@ export class CommandParser extends null {
 			if (!argument) {
 				return {
 					arg: null,
-					status: CommandParserOptionResultStatus[
-						data.required ? "Required" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[data.required ? "Required" : "Pass"]
 				};
 			}
 
@@ -228,33 +180,21 @@ export class CommandParser extends null {
 			};
 		},
 
-		async [ApplicationCommandOptionType.Channel]({
-			data,
-			preParsedArgs,
-			message
-		}) {
+		async [ApplicationCommandOptionType.Channel]({ data, preParsedArgs, message }) {
 			const original = preParsedArgs.shift();
 			let argument = original ?? null;
 			if (!argument) {
 				return {
 					arg: null,
-					status: CommandParserOptionResultStatus[
-						data.required ? "Required" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[data.required ? "Required" : "Pass"]
 				};
 			}
 
-			argument = MessageMentions.ChannelsPattern.test(argument)
-				? argument.slice(2, -1)
-				: argument;
-			const channel = await message.client.channels
-				.fetch(argument)
-				.catch(() => {});
+			argument = MessageMentions.ChannelsPattern.test(argument) ? argument.slice(2, -1) : argument;
+			const channel = await message.client.channels.fetch(argument).catch(() => {});
 			return {
 				arg: channel ?? original,
-				status: CommandParserOptionResultStatus[
-					!channel ? "WrongFormat" : "Pass"
-				]
+				status: CommandParserOptionResultStatus[!channel ? "WrongFormat" : "Pass"]
 			};
 		},
 
@@ -264,17 +204,12 @@ export class CommandParser extends null {
 			if (!argument) {
 				return {
 					arg: null,
-					status: CommandParserOptionResultStatus[
-						data.required ? "Required" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[data.required ? "Required" : "Pass"]
 				};
 			}
 
 			if ("choices" in data && data.choices) {
-				argument = CommandParser.getChoicesValue(
-					data.choices,
-					argument
-				);
+				argument = CommandParser.getChoicesValue(data.choices, argument);
 				if (!argument) {
 					return {
 						arg: original,
@@ -316,52 +251,34 @@ export class CommandParser extends null {
 			};
 		},
 
-		async [ApplicationCommandOptionType.Mentionable]({
-			data,
-			preParsedArgs,
-			message
-		}) {
+		async [ApplicationCommandOptionType.Mentionable]({ data, preParsedArgs, message }) {
 			const original = preParsedArgs.shift();
 			let argument = original ?? null;
 			if (!argument) {
 				return {
 					arg: null,
-					status: CommandParserOptionResultStatus[
-						data.required ? "Required" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[data.required ? "Required" : "Pass"]
 				};
 			}
 
 			if (MessageMentions.RolesPattern.test(argument)) {
-				const role = await message.guild?.roles
-					.fetch(argument.slice(3, -1))
-					.catch(() => {});
+				const role = await message.guild?.roles.fetch(argument.slice(3, -1)).catch(() => {});
 				return {
 					arg: role ?? original,
-					status: CommandParserOptionResultStatus[
-						!role ? "WrongFormat" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[!role ? "WrongFormat" : "Pass"]
 				};
 			}
 			if (MessageMentions.UsersPattern.test(argument)) {
-				const user = await message.client.users
-					.fetch(argument.slice(2, -1))
-					.catch(() => {});
+				const user = await message.client.users.fetch(argument.slice(2, -1)).catch(() => {});
 				return {
 					arg: user ?? original,
-					status: CommandParserOptionResultStatus[
-						!user ? "WrongFormat" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[!user ? "WrongFormat" : "Pass"]
 				};
 			}
-			const mentionable =
-				(await message.guild?.roles.fetch(argument).catch(() => {})) ??
-				(await message.client.users.fetch(argument).catch(() => {}));
+			const mentionable = (await message.guild?.roles.fetch(argument).catch(() => {})) ?? (await message.client.users.fetch(argument).catch(() => {}));
 			return {
 				arg: mentionable ?? original,
-				status: CommandParserOptionResultStatus[
-					!mentionable ? "WrongFormat" : "Pass"
-				]
+				status: CommandParserOptionResultStatus[!mentionable ? "WrongFormat" : "Pass"]
 			};
 		},
 
@@ -371,17 +288,12 @@ export class CommandParser extends null {
 			if (!argument) {
 				return {
 					arg: null,
-					status: CommandParserOptionResultStatus[
-						data.required ? "Required" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[data.required ? "Required" : "Pass"]
 				};
 			}
 
 			if ("choices" in data && data.choices) {
-				argument = CommandParser.getChoicesValue(
-					data.choices,
-					argument
-				);
+				argument = CommandParser.getChoicesValue(data.choices, argument);
 				if (!argument) {
 					return {
 						arg: original,
@@ -419,33 +331,23 @@ export class CommandParser extends null {
 			};
 		},
 
-		async [ApplicationCommandOptionType.Role]({
-			data,
-			preParsedArgs,
-			message
-		}) {
+		async [ApplicationCommandOptionType.Role]({ data, preParsedArgs, message }) {
 			const original = preParsedArgs.shift();
 			let argument = original ?? null;
 			if (!argument) {
 				return {
 					arg: null,
-					status: CommandParserOptionResultStatus[
-						data.required ? "Required" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[data.required ? "Required" : "Pass"]
 				};
 			}
 
 			if (MessageMentions.RolesPattern.test(argument)) {
 				argument = argument.slice(3, -1);
 			}
-			const role = await message.guild?.roles
-				.fetch(argument)
-				.catch(() => {});
+			const role = await message.guild?.roles.fetch(argument).catch(() => {});
 			return {
 				arg: role ?? original,
-				status: CommandParserOptionResultStatus[
-					!role ? "WrongFormat" : "Pass"
-				]
+				status: CommandParserOptionResultStatus[!role ? "WrongFormat" : "Pass"]
 			};
 		},
 
@@ -455,17 +357,12 @@ export class CommandParser extends null {
 			if (!argument) {
 				return {
 					arg: null,
-					status: CommandParserOptionResultStatus[
-						data.required ? "Required" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[data.required ? "Required" : "Pass"]
 				};
 			}
 
 			if ("choices" in data && data.choices) {
-				argument = CommandParser.getChoicesValue(
-					data.choices,
-					argument
-				);
+				argument = CommandParser.getChoicesValue(data.choices, argument);
 				if (!argument) {
 					return {
 						arg: original,
@@ -474,11 +371,7 @@ export class CommandParser extends null {
 					};
 				}
 			}
-			if (
-				data.parseAs === CommandOptionType.Emoji &&
-				!emojiRegex().test(argument) &&
-				!/<?(a)?:?(\w{2,32}):(\d{17,20})>?/.test(argument)
-			) {
+			if (data.parseAs === CommandOptionType.Emoji && !emojiRegex().test(argument) && !/<?(a)?:?(\w{2,32}):(\d{17,20})>?/.test(argument)) {
 				return {
 					arg: original,
 					status: CommandParserOptionResultStatus.WrongFormat
@@ -506,19 +399,13 @@ export class CommandParser extends null {
 			};
 		},
 
-		async [ApplicationCommandOptionType.User]({
-			data,
-			preParsedArgs,
-			message
-		}) {
+		async [ApplicationCommandOptionType.User]({ data, preParsedArgs, message }) {
 			const original = preParsedArgs.shift();
 			let argument = original ?? null;
 			if (!argument) {
 				return {
 					arg: null,
-					status: CommandParserOptionResultStatus[
-						data.required ? "Required" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[data.required ? "Required" : "Pass"]
 				};
 			}
 
@@ -526,24 +413,16 @@ export class CommandParser extends null {
 				argument = argument.slice(2, -1);
 			}
 			if (data.parseAs === CommandOptionType.Member) {
-				const member = await message.guild?.members
-					.fetch(argument)
-					.catch(() => {});
+				const member = await message.guild?.members.fetch(argument).catch(() => {});
 				return {
 					arg: member ?? original,
-					status: CommandParserOptionResultStatus[
-						!member ? "WrongFormat" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[!member ? "WrongFormat" : "Pass"]
 				};
 			}
-			const user = await message.client.users
-				.fetch(argument)
-				.catch(() => {});
+			const user = await message.client.users.fetch(argument).catch(() => {});
 			return {
 				arg: user ?? original,
-				status: CommandParserOptionResultStatus[
-					!user ? "WrongFormat" : "Pass"
-				]
+				status: CommandParserOptionResultStatus[!user ? "WrongFormat" : "Pass"]
 			};
 		},
 
@@ -565,123 +444,71 @@ export class CommandParser extends null {
 	 * 要先在 [] 裡面指定參數型別，再把選項傳進函式裡，如果參數型別給了 `Subcommand` 或 `SubcommandGroup` 則會報錯。
 	 */
 	static ParseSlashOption: ParseSlashOptionFunctions = {
-		async [ApplicationCommandOptionType.Attachment]({
-			interaction,
-			data,
-			optionName
-		}) {
-			const argument = interaction.options.getAttachment(
-				optionName ?? data.name
-			);
+		async [ApplicationCommandOptionType.Attachment]({ interaction, data, optionName }) {
+			const argument = interaction.options.getAttachment(optionName ?? data.name);
 			return {
 				arg: argument,
 				status: CommandParserOptionResultStatus.Pass
 			};
 		},
 
-		async [ApplicationCommandOptionType.Boolean]({
-			interaction,
-			data,
-			optionName
-		}) {
-			const argument = interaction.options.getBoolean(
-				optionName ?? data.name
-			);
+		async [ApplicationCommandOptionType.Boolean]({ interaction, data, optionName }) {
+			const argument = interaction.options.getBoolean(optionName ?? data.name);
 			return {
 				arg: argument,
 				status: CommandParserOptionResultStatus.Pass
 			};
 		},
 
-		async [ApplicationCommandOptionType.Channel]({
-			interaction,
-			data,
-			optionName
-		}) {
-			const argument = interaction.options.getChannel(
-				optionName ?? data.name
-			);
+		async [ApplicationCommandOptionType.Channel]({ interaction, data, optionName }) {
+			const argument = interaction.options.getChannel(optionName ?? data.name);
 			return {
 				arg: argument,
 				status: CommandParserOptionResultStatus.Pass
 			};
 		},
 
-		async [ApplicationCommandOptionType.Integer]({
-			interaction,
-			data,
-			optionName
-		}) {
-			const argument = interaction.options.getInteger(
-				optionName ?? data.name
-			);
+		async [ApplicationCommandOptionType.Integer]({ interaction, data, optionName }) {
+			const argument = interaction.options.getInteger(optionName ?? data.name);
 			return {
 				arg: argument,
 				status: CommandParserOptionResultStatus.Pass
 			};
 		},
 
-		async [ApplicationCommandOptionType.Mentionable]({
-			interaction,
-			data,
-			optionName
-		}) {
-			const argument = interaction.options.getMentionable(
-				optionName ?? data.name
-			);
+		async [ApplicationCommandOptionType.Mentionable]({ interaction, data, optionName }) {
+			const argument = interaction.options.getMentionable(optionName ?? data.name);
 			return {
 				arg: argument,
 				status: CommandParserOptionResultStatus.Pass
 			};
 		},
 
-		async [ApplicationCommandOptionType.Number]({
-			interaction,
-			data,
-			optionName
-		}) {
-			const argument = interaction.options.getNumber(
-				optionName ?? data.name
-			);
+		async [ApplicationCommandOptionType.Number]({ interaction, data, optionName }) {
+			const argument = interaction.options.getNumber(optionName ?? data.name);
 			return {
 				arg: argument,
 				status: CommandParserOptionResultStatus.Pass
 			};
 		},
 
-		async [ApplicationCommandOptionType.Role]({
-			interaction,
-			data,
-			optionName
-		}) {
-			const argument = interaction.options.getRole(
-				optionName ?? data.name
-			);
+		async [ApplicationCommandOptionType.Role]({ interaction, data, optionName }) {
+			const argument = interaction.options.getRole(optionName ?? data.name);
 			return {
 				arg: argument,
 				status: CommandParserOptionResultStatus.Pass
 			};
 		},
 
-		async [ApplicationCommandOptionType.String]({
-			interaction,
-			data,
-			optionName
-		}) {
-			const argument = interaction.options.getString(
-				optionName ?? data.name
-			);
+		async [ApplicationCommandOptionType.String]({ interaction, data, optionName }) {
+			const argument = interaction.options.getString(optionName ?? data.name);
 			if (argument === null) {
 				return {
 					arg: null,
 					status: CommandParserOptionResultStatus.Pass
 				};
 			}
-			if (
-				data.parseAs === CommandOptionType.Emoji &&
-				!emojiRegex().test(argument) &&
-				!/<?(a)?:?(\w{2,32}):(\d{17,19})>?/.test(argument)
-			) {
+			if (data.parseAs === CommandOptionType.Emoji && !emojiRegex().test(argument) && !/<?(a)?:?(\w{2,32}):(\d{17,19})>?/.test(argument)) {
 				return {
 					arg: null,
 					status: CommandParserOptionResultStatus.WrongFormat
@@ -693,13 +520,8 @@ export class CommandParser extends null {
 			};
 		},
 
-		async [ApplicationCommandOptionType.User]({
-			interaction,
-			data,
-			optionName
-		}) {
-			const argument =
-				interaction.options.getUser(optionName ?? data.name) ?? null;
+		async [ApplicationCommandOptionType.User]({ interaction, data, optionName }) {
+			const argument = interaction.options.getUser(optionName ?? data.name) ?? null;
 			if (argument === null) {
 				return {
 					arg: argument,
@@ -707,13 +529,10 @@ export class CommandParser extends null {
 				};
 			}
 			if (data.parseAs === CommandOptionType.Member) {
-				const member =
-					interaction.guild?.members.resolve(argument.id) ?? null;
+				const member = interaction.guild?.members.resolve(argument.id) ?? null;
 				return {
 					arg: member ?? argument,
-					status: CommandParserOptionResultStatus[
-						!member ? "WrongFormat" : "Pass"
-					]
+					status: CommandParserOptionResultStatus[!member ? "WrongFormat" : "Pass"]
 				};
 			}
 			return {

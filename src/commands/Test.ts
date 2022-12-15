@@ -8,14 +8,7 @@ export default class Ping extends Command<[]> {
 			type: CommandType.Developer,
 			name: "test",
 			description: "敲一下我的大腿看我的反應時間",
-			aliases: [
-				"paren<K>",
-				"SYNM",
-				'fra"c',
-				"fucko'suck",
-				"testify",
-				"rt"
-			]
+			aliases: ["paren<K>", "SYNM", 'fra"c', "fucko'suck", "testify", "rt"]
 		});
 	}
 
@@ -23,8 +16,6 @@ export default class Ping extends Command<[]> {
 		await source.defer();
 		const message = await source.update("計算中……");
 		const ping = message.createdTimestamp - source.createdTimestamp;
-		await message.edit(
-			`:information_source:｜Pong！機器人延遲為：${ping}ms，API 延遲為：${source.client.ws.ping}ms`
-		);
+		await message.edit(`:information_source:｜Pong！機器人延遲為：${ping}ms，API 延遲為：${source.client.ws.ping}ms`);
 	}
 }

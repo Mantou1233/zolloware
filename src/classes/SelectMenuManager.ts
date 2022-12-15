@@ -1,8 +1,4 @@
-import {
-	Interaction,
-	InteractionType,
-	SelectMenuInteraction
-} from "discord.js";
+import { Interaction, InteractionType, SelectMenuInteraction } from "discord.js";
 import fs from "node:fs";
 import path from "node:path";
 import constant from "@root/constant.json";
@@ -20,10 +16,7 @@ export class SelectMenuManager {
 	/**
 	 * 選單識別ID－回應方式的鍵值對
 	 */
-	private data: Map<
-		string,
-		(interaction: SelectMenuInteraction<"cached">) => Promise<void>
-	>;
+	private data: Map<string, (interaction: SelectMenuInteraction<"cached">) => Promise<void>>;
 
 	/**
 	 * 永久選單的回應是否已載入完畢
@@ -45,15 +38,12 @@ export class SelectMenuManager {
 	 * @param dirPath 要載入的目標資料夾
 	 */
 	public async load(dirPath: string): Promise<void> {
-		if (this.loaded)
-			throw new Error("Autocomplete has already been loaded.");
+		if (this.loaded) throw new Error("Autocomplete has already been loaded.");
 
 		const buttonFiles = fs.readdirSync(dirPath);
 		for (const file of buttonFiles) {
 			if (!file.endsWith(".js")) continue;
-			const func: (
-				interaction: SelectMenuInteraction<"cached">
-			) => Promise<void> = require(path.join(dirPath, file)).default;
+			const func: (interaction: SelectMenuInteraction<"cached">) => Promise<void> = require(path.join(dirPath, file)).default;
 			this.data.set(file.slice(0, -3), func);
 		}
 
@@ -65,18 +55,10 @@ export class SelectMenuManager {
 	 * @param interaction 從 client#on('interactionCreate') 得到的指令互動
 	 */
 	public async onInteractionCreate(interaction: Interaction): Promise<void> {
-		if (
-			interaction.type !== InteractionType.MessageComponent ||
-			!interaction.isSelectMenu()
-		)
-			return;
+		if (interaction.type !== InteractionType.MessageComponent || !interaction.isSelectMenu()) return;
 		if (!interaction.inCachedGuild()) return;
 		if (interaction.user.blocked) return;
-		if (
-			this.client.devMode &&
-			interaction.guild.id !== constant.mainGuild.id
-		)
-			return;
+		if (this.client.devMode && interaction.guild.id !== constant.mainGuild.id) return;
 
 		const [identifier] = interaction.customId.split("_");
 		const action = this.data.get(identifier);

@@ -16,10 +16,7 @@ export class ButtonManager {
 	/**
 	 * 按鈕識別ID－回應方式的鍵值對
 	 */
-	private data: Map<
-		string,
-		(interaction: ButtonInteraction<"cached">) => Promise<void>
-	>;
+	private data: Map<string, (interaction: ButtonInteraction<"cached">) => Promise<void>>;
 
 	/**
 	 * 永久按鈕的回應是否已載入完畢
@@ -41,15 +38,12 @@ export class ButtonManager {
 	 * @param dirPath 要載入的目標資料夾
 	 */
 	public async load(dirPath: string): Promise<void> {
-		if (this.loaded)
-			throw new Error("Autocomplete has already been loaded.");
+		if (this.loaded) throw new Error("Autocomplete has already been loaded.");
 
 		const buttonFiles = fs.readdirSync(dirPath);
 		for (const file of buttonFiles) {
 			if (!file.endsWith(".js")) continue;
-			const func: (
-				interaction: ButtonInteraction<"cached">
-			) => Promise<void> = require(path.join(dirPath, file)).default;
+			const func: (interaction: ButtonInteraction<"cached">) => Promise<void> = require(path.join(dirPath, file)).default;
 			this.data.set(file.slice(0, -3), func);
 		}
 
@@ -61,18 +55,10 @@ export class ButtonManager {
 	 * @param interaction 從 client#on('interactionCreate') 得到的指令互動
 	 */
 	public async onInteractionCreate(interaction: Interaction): Promise<void> {
-		if (
-			interaction.type !== InteractionType.MessageComponent ||
-			!interaction.isButton()
-		)
-			return;
+		if (interaction.type !== InteractionType.MessageComponent || !interaction.isButton()) return;
 		if (!interaction.inCachedGuild()) return;
 		if (interaction.user.blocked) return;
-		if (
-			this.client.devMode &&
-			interaction.guild.id !== constant.mainGuild.id
-		)
-			return;
+		if (this.client.devMode && interaction.guild.id !== constant.mainGuild.id) return;
 
 		const [identifier] = interaction.customId.split("_");
 		const action = this.data.get(identifier);

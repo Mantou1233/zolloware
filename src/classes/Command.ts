@@ -1,9 +1,4 @@
-import {
-	ChatInputCommandInteraction,
-	GuildMember,
-	GuildTextBasedChannel,
-	Message
-} from "discord.js";
+import { ChatInputCommandInteraction, GuildMember, GuildTextBasedChannel, Message } from "discord.js";
 import { Source } from "./Source";
 import { ArgumentParseType, CommandType } from "../utils/enums";
 import { CommandOptions, CommandPermission } from "../utils/interfaces";
@@ -106,12 +101,7 @@ export abstract class Command<T = unknown> {
 	 * @param member 觸發指令的成員
 	 * @returns 來源訊息
 	 */
-	public async messageExecute(
-		message: Message<true>,
-		args: T,
-		channel: GuildTextBasedChannel,
-		member: GuildMember
-	): Promise<Source<Message<true>>> {
+	public async messageExecute(message: Message<true>, args: T, channel: GuildTextBasedChannel, member: GuildMember): Promise<Source<Message<true>>> {
 		const source = new Source(message, channel, member);
 		await this.execute(source, args);
 		return source;

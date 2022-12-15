@@ -4,12 +4,7 @@ import randomInt from "../features/utils/randomInt";
 
 Object.defineProperties(EmbedBuilder.prototype, {
 	applyHiZolloSettings: {
-		value: function (
-			this: EmbedBuilder,
-			member: GuildMember | null,
-			authorText: string,
-			footerText?: string
-		): EmbedBuilder {
+		value: function (this: EmbedBuilder, member: GuildMember | null, authorText: string, footerText?: string): EmbedBuilder {
 			return this.setHiZolloColor()
 				.setUserAuthor(member?.client.user ?? null, authorText)
 				.setMemberFooter(member, footerText);
@@ -23,11 +18,7 @@ Object.defineProperties(EmbedBuilder.prototype, {
 	},
 
 	setMemberAuthor: {
-		value: function (
-			this: EmbedBuilder,
-			member: GuildMember | null,
-			authorText: string
-		): EmbedBuilder {
+		value: function (this: EmbedBuilder, member: GuildMember | null, authorText: string): EmbedBuilder {
 			return this.setAuthor({
 				name: authorText,
 				iconURL: member?.displayAvatarURL()
@@ -36,26 +27,16 @@ Object.defineProperties(EmbedBuilder.prototype, {
 	},
 
 	setMemberFooter: {
-		value: function (
-			this: EmbedBuilder,
-			member: GuildMember | null,
-			footerText?: string
-		): EmbedBuilder {
+		value: function (this: EmbedBuilder, member: GuildMember | null, footerText?: string): EmbedBuilder {
 			return this.setFooter({
-				text:
-					(member?.tag ? `${member.tag}．` : "") +
-					(footerText ?? randomFooter()),
+				text: (member?.tag ? `${member.tag}．` : "") + (footerText ?? randomFooter()),
 				iconURL: member?.displayAvatarURL()
 			});
 		}
 	},
 
 	setUserAuthor: {
-		value: function (
-			this: EmbedBuilder,
-			user: User | null,
-			authorText: string
-		): EmbedBuilder {
+		value: function (this: EmbedBuilder, user: User | null, authorText: string): EmbedBuilder {
 			return this.setAuthor({
 				name: authorText,
 				iconURL: user?.displayAvatarURL()
@@ -64,15 +45,9 @@ Object.defineProperties(EmbedBuilder.prototype, {
 	},
 
 	setUserFooter: {
-		value: function (
-			this: EmbedBuilder,
-			user: User | null,
-			footerText?: string
-		): EmbedBuilder {
+		value: function (this: EmbedBuilder, user: User | null, footerText?: string): EmbedBuilder {
 			return this.setFooter({
-				text:
-					(user?.tag ? `${user.tag}．` : "") +
-					(footerText ?? randomFooter()),
+				text: (user?.tag ? `${user.tag}．` : "") + (footerText ?? randomFooter()),
 				iconURL: user?.displayAvatarURL()
 			});
 		}

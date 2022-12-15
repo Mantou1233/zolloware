@@ -1,13 +1,5 @@
 import path from "node:path";
-import {
-	Client,
-	Collection,
-	Message,
-	MessageReaction,
-	PermissionFlagsBits,
-	PermissionsBitField,
-	WebhookClient
-} from "discord.js";
+import { Client, Collection, Message, MessageReaction, PermissionFlagsBits, PermissionsBitField, WebhookClient } from "discord.js";
 import { CommandManager } from "./CommandManager";
 import CooldownManager from "./CooldownManager";
 import config from "@root/config";
@@ -39,11 +31,8 @@ export class HZClient extends Client {
 
 		this.devMode = options.devMode ?? false;
 
-		if (!process.env.BLOCKED_USERS)
-			throw new Error("Blocked users not configured.");
-		this.blockedUsers = new Set(
-			eval(process.env.BLOCKED_USERS) as string[]
-		);
+		if (!process.env.BLOCKED_USERS) throw new Error("Blocked users not configured.");
+		this.blockedUsers = new Set(eval(process.env.BLOCKED_USERS) as string[]);
 
 		this.logger = new WebhookLogger(this);
 
@@ -102,18 +91,13 @@ export class HZClient extends Client {
 				permissions.add(command.permissions?.bot ?? []);
 			});
 		});
-		permissions.add(
-			PermissionFlagsBits.ManageWebhooks,
-			PermissionsBitField.StageModerator
-		);
+		permissions.add(PermissionFlagsBits.ManageWebhooks, PermissionsBitField.StageModerator);
 
 		return (this._invitePermissions = permissions);
 	}
 
 	public async guildCount(): Promise<number> {
-		const counts = (await this.shard
-			?.fetchClientValues("guilds.cache.size")
-			.catch(() => {})) as number[] | undefined;
+		const counts = (await this.shard?.fetchClientValues("guilds.cache.size").catch(() => {})) as number[] | undefined;
 		return counts?.reduce((acc, cur) => acc + cur, 0) ?? 0;
 	}
 
@@ -132,9 +116,7 @@ export class HZClient extends Client {
 	 * @param message 訊息
 	 * @returns 成功反應時回傳該反應
 	 */
-	public async randomReact(
-		message: Message
-	): Promise<MessageReaction | void> {
+	public async randomReact(message: Message): Promise<MessageReaction | void> {
 		if (message.author.blocked || message.author.bot) return;
 		if (this.devMode && !message.channel.isTestChannel()) return;
 		if (randomInt(0, this.ReactConstant - 1)) return;
@@ -145,10 +127,7 @@ export class HZClient extends Client {
 	/**
 	 * 需要投票功能的頻道 ID
 	 */
-	private readonly pollChannelId = [
-		constant.mainGuild.channels.announcementId,
-		constant.mainGuild.channels.suggestReportId
-	];
+	private readonly pollChannelId = [constant.mainGuild.channels.announcementId, constant.mainGuild.channels.suggestReportId];
 
 	/**
 	 * 對指定頻道中的訊息附加投票用的表情符號
@@ -176,23 +155,16 @@ export class HZClient extends Client {
 		if (message.author.blocked || message.author.bot) return;
 		if (!message.content.startsWith(this.addonPrefix)) return;
 
-		const [command] = message.content
-			.slice(this.addonPrefix.length)
-			.trim()
-			.split(/ +/, 1);
+		const [command] = message.content.slice(this.addonPrefix.length).trim().split(/ +/, 1);
 		switch (command) {
 			case "rule1":
 			case "r1":
 			case "tag":
-				return message.channel.send(
-					"請不要隨意 tag 其他使用者，若是請求幫助也不要 tag 太多次"
-				);
+				return message.channel.send("請不要隨意 tag 其他使用者，若是請求幫助也不要 tag 太多次");
 
 			case "offline":
 			case "ol":
-				return message.channel.send(
-					"每個月的最後一個週末是定期下線維護日，該日若沒有上線是正常的"
-				);
+				return message.channel.send("每個月的最後一個週末是定期下線維護日，該日若沒有上線是正常的");
 
 			case "networksync":
 			case "ns":
@@ -205,9 +177,7 @@ export class HZClient extends Client {
 
 			case "cantuse":
 			case "cu":
-				return message.channel.send(
-					"**我們不會通靈**\n如果不能使用，請報上那個指令的名稱，你的使用方式，最好能附上時間點，方便我們查詢記錄"
-				);
+				return message.channel.send("**我們不會通靈**\n如果不能使用，請報上那個指令的名稱，你的使用方式，最好能附上時間點，方便我們查詢記錄");
 
 			case "howtouse":
 			case "htu":
@@ -220,9 +190,7 @@ export class HZClient extends Client {
 			case "[]":
 			case "<>":
 			case "bracket":
-				return message.channel.send(
-					"使用指令時，請不要將括號（`[]<>`）一同輸入\n`[]`符號表示這個參數必填，`<>`則是不必填"
-				);
+				return message.channel.send("使用指令時，請不要將括號（`[]<>`）一同輸入\n`[]`符號表示這個參數必填，`<>`則是不必填");
 
 			case "changelog":
 			case "cl":
@@ -254,20 +222,11 @@ export class HZClient extends Client {
 
 			case "python":
 			case "py":
-				return message.channel
-					.send(
-						"Python 在這裡是禁語，不能討論的，他是絕對的邪教。在這裡討論有關 Python 的事情都有可能遭受極大的懲罰"
-					)
-					.then(msg => {
-						setTimeout(() => {
-							msg.edit(
-								msg.content.replace(
-									/Python/g,
-									"[敏感字詞已和諧]"
-								)
-							);
-						}, 1900);
-					});
+				return message.channel.send("Python 在這裡是禁語，不能討論的，他是絕對的邪教。在這裡討論有關 Python 的事情都有可能遭受極大的懲罰").then(msg => {
+					setTimeout(() => {
+						msg.edit(msg.content.replace(/Python/g, "[敏感字詞已和諧]"));
+					}, 1900);
+				});
 
 			case "database":
 			case "db":
@@ -278,15 +237,11 @@ export class HZClient extends Client {
 
 			case "24/7":
 			case "247":
-				return message.channel.send(
-					"HiZollo 是在 heroku 上代管的，才能做到幾乎 24/7 上線"
-				);
+				return message.channel.send("HiZollo 是在 heroku 上代管的，才能做到幾乎 24/7 上線");
 
 			case "opensource":
 			case "os":
-				return message.channel.send(
-					"HiZollo 的 專案是開源的，你可以到 https://github.com/HiZollo/Junior-HiZollo 查看原始碼"
-				);
+				return message.channel.send("HiZollo 的 專案是開源的，你可以到 https://github.com/HiZollo/Junior-HiZollo 查看原始碼");
 
 			case "otherbot":
 			case "ob":
@@ -298,15 +253,11 @@ export class HZClient extends Client {
 			case "spoonfeed":
 			case "sf":
 			case "google":
-				return message.channel.send(
-					"有些問題請自行 Google，不要當伸手牌，真正不能解決的問題再發問"
-				);
+				return message.channel.send("有些問題請自行 Google，不要當伸手牌，真正不能解決的問題再發問");
 
 			case "notdeleted":
 			case "nd":
-				return message.channel.send(
-					"當你發現 HiZollo 沒有把訊息刪乾淨時，其實那只是 Discord 的顯示問題，重新整理之後你就會發現訊息被刪掉了"
-				);
+				return message.channel.send("當你發現 HiZollo 沒有把訊息刪乾淨時，其實那只是 Discord 的顯示問題，重新整理之後你就會發現訊息被刪掉了");
 		}
 	}
 }

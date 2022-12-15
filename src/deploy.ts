@@ -18,9 +18,7 @@ import { Translator } from "./classes/Translator";
 
 (async () => {
 	const rest = new REST({ version: "10" }).setToken(config.bot.token);
-	const { globalCommands, devCommands } = loadCommands(
-		path.join(__dirname, "./commands")
-	);
+	const { globalCommands, devCommands } = loadCommands(path.join(__dirname, "./commands"));
 
 	try {
 		console.log("正在註冊全域指令");
@@ -30,13 +28,7 @@ import { Translator } from "./classes/Translator";
 		console.log("全域指令註冊成功");
 
 		console.log("正在註冊私人指令");
-		await rest.put(
-			Routes.applicationGuildCommands(
-				config.bot.id,
-				constant.devGuild.id
-			),
-			{ body: devCommands }
-		);
+		await rest.put(Routes.applicationGuildCommands(config.bot.id, constant.devGuild.id), { body: devCommands });
 		console.log("私人指令註冊成功");
 	} catch (error) {
 		console.error(error);
@@ -68,22 +60,13 @@ function loadCommands(dirPath: string): {
 
 		// 非指令群的指令就直接加進去
 		if (command.type !== CommandType.SubcommandGroup) {
-			(command.type === CommandType.Developer
-				? devCommands
-				: globalCommands
-			).push(parseCommand(command));
+			(command.type === CommandType.Developer ? devCommands : globalCommands).push(parseCommand(command));
 			continue;
 		}
 
 		// 指令群就去讀群組指令
-		const globalBuilder = new SlashCommandBuilder()
-			.setName(command.name)
-			.setDescription(command.description)
-			.setDMPermission(false);
-		const devBuilder = new SlashCommandBuilder()
-			.setName(command.name)
-			.setDescription(command.description)
-			.setDMPermission(false);
+		const globalBuilder = new SlashCommandBuilder().setName(command.name).setDescription(command.description).setDMPermission(false);
+		const devBuilder = new SlashCommandBuilder().setName(command.name).setDescription(command.description).setDMPermission(false);
 		let globalExist = false,
 			devExist = false;
 
@@ -92,21 +75,12 @@ function loadCommands(dirPath: string): {
 		for (const subcommandFile of subcommandFiles) {
 			if (!subcommandFile.endsWith(".js")) continue;
 
-			const C: new () => Command = require(path.join(
-				filePath,
-				subcommandFile
-			)).default;
+			const C: new () => Command = require(path.join(filePath, subcommandFile)).default;
 			const subcommand = new C();
 
 			const subcommandBuilder = parseSubcommand(subcommand);
-			(subcommand.type === CommandType.Developer
-				? devBuilder
-				: globalBuilder
-			).addSubcommand(subcommandBuilder);
-			(subcommand.type === CommandType.Developer
-				? zDevCommands
-				: zGlobalCommands
-			).push([command.name, subcommandBuilder]);
+			(subcommand.type === CommandType.Developer ? devBuilder : globalBuilder).addSubcommand(subcommandBuilder);
+			(subcommand.type === CommandType.Developer ? zDevCommands : zGlobalCommands).push([command.name, subcommandBuilder]);
 			globalExist ||= subcommand.type !== CommandType.Developer;
 			devExist ||= subcommand.type === CommandType.Developer;
 		}
@@ -117,10 +91,7 @@ function loadCommands(dirPath: string): {
 
 	// 處理 z 指令
 	if (zGlobalCommands.length) {
-		const builder = new SlashCommandBuilder()
-			.setName("z")
-			.setDescription("執行 z 指令")
-			.setDMPermission(false);
+		const builder = new SlashCommandBuilder().setName("z").setDescription("執行 z 指令").setDMPermission(false);
 		zGlobalCommands.forEach(([parent, command]) => {
 			command.setName(Translator.getZShortcut([parent, command.name])!);
 			builder.addSubcommand(command);
@@ -128,10 +99,7 @@ function loadCommands(dirPath: string): {
 		globalCommands.push(builder.toJSON());
 	}
 	if (zDevCommands.length) {
-		const builder = new SlashCommandBuilder()
-			.setName("z")
-			.setDescription("執行 z 指令")
-			.setDMPermission(false);
+		const builder = new SlashCommandBuilder().setName("z").setDescription("執行 z 指令").setDMPermission(false);
 		zDevCommands.forEach(([parent, command]) => {
 			command.setName(Translator.getZShortcut([parent, command.name])!);
 			builder.addSubcommand(command);
@@ -147,18 +115,11 @@ function loadCommands(dirPath: string): {
  * @param command 指令本人
  * @returns
  */
-function parseCommand(
-	command: Command
-): RESTPostAPIApplicationCommandsJSONBody {
-	const builder = new SlashCommandBuilder()
-		.setName(command.name)
-		.setDescription(command.description)
-		.setDMPermission(false);
+function parseCommand(command: Command): RESTPostAPIApplicationCommandsJSONBody {
+	const builder = new SlashCommandBuilder().setName(command.name).setDescription(command.description).setDMPermission(false);
 
 	if (command.permissions?.user) {
-		builder.setDefaultMemberPermissions(
-			command.permissions.user.reduce((acc, cur) => acc | cur, 0n)
-		);
+		builder.setDefaultMemberPermissions(command.permissions.user.reduce((acc, cur) => acc | cur, 0n));
 	}
 
 	command.options?.forEach(option => addOption(builder, option));
@@ -173,9 +134,7 @@ function parseCommand(
  * @returns 群組指令
  */
 function parseSubcommand(command: Command): SlashCommandSubcommandBuilder {
-	const subcommandbuilder = new SlashCommandSubcommandBuilder()
-		.setName(command.name)
-		.setDescription(command.description);
+	const subcommandbuilder = new SlashCommandSubcommandBuilder().setName(command.name).setDescription(command.description);
 
 	command.options?.forEach(option => addOption(subcommandbuilder, option));
 	return subcommandbuilder;
@@ -186,30 +145,17 @@ function parseSubcommand(command: Command): SlashCommandSubcommandBuilder {
  * @param builder 建築師本人
  * @param option 從 {@link Command} 來的選項
  */
-function addOption(
-	builder: SlashCommandBuilder | SlashCommandSubcommandBuilder,
-	option: HZCommandOptionData
-): void {
+function addOption(builder: SlashCommandBuilder | SlashCommandSubcommandBuilder, option: HZCommandOptionData): void {
 	for (let i = 1; i <= (option.repeat ? 5 : 1); i++) {
 		const name = option.name.replaceAll("%i", `${i}`);
 		const description = option.description.replaceAll("%i", `${i}`);
 		switch (option.type) {
 			case ApplicationCommandOptionType.Attachment:
-				builder.addAttachmentOption(o =>
-					o
-						.setName(name)
-						.setDescription(description)
-						.setRequired(!!option.required)
-				);
+				builder.addAttachmentOption(o => o.setName(name).setDescription(description).setRequired(!!option.required));
 				break;
 
 			case ApplicationCommandOptionType.Boolean:
-				builder.addBooleanOption(o =>
-					o
-						.setName(name)
-						.setDescription(description)
-						.setRequired(!!option.required)
-				);
+				builder.addBooleanOption(o => o.setName(name).setDescription(description).setRequired(!!option.required));
 				break;
 
 			case ApplicationCommandOptionType.Channel:
@@ -218,24 +164,16 @@ function addOption(
 						.setName(name)
 						.setDescription(description)
 						.setRequired(!!option.required)
-						.addChannelTypes(
-							...((option.channelTypes ??
-								[]) as ApplicationCommandOptionAllowedChannelTypes[])
-						)
+						.addChannelTypes(...((option.channelTypes ?? []) as ApplicationCommandOptionAllowedChannelTypes[]))
 				);
 				break;
 
 			case ApplicationCommandOptionType.Integer:
 				builder.addIntegerOption(o => {
-					o.setName(name)
-						.setDescription(description)
-						.setRequired(!!option.required)
-						.setAutocomplete(!!option.autocomplete);
+					o.setName(name).setDescription(description).setRequired(!!option.required).setAutocomplete(!!option.autocomplete);
 					if ("minValue" in option) {
-						if (option.minValue != null)
-							o.setMinValue(option.minValue);
-						if (option.maxValue != null)
-							o.setMaxValue(option.maxValue);
+						if (option.minValue != null) o.setMinValue(option.minValue);
+						if (option.maxValue != null) o.setMaxValue(option.maxValue);
 					}
 					if ("choices" in option) {
 						if (option.choices != null)
@@ -251,25 +189,15 @@ function addOption(
 				break;
 
 			case ApplicationCommandOptionType.Mentionable:
-				builder.addMentionableOption(o =>
-					o
-						.setName(name)
-						.setDescription(description)
-						.setRequired(!!option.required)
-				);
+				builder.addMentionableOption(o => o.setName(name).setDescription(description).setRequired(!!option.required));
 				break;
 
 			case ApplicationCommandOptionType.Number:
 				builder.addNumberOption(o => {
-					o.setName(name)
-						.setDescription(description)
-						.setRequired(!!option.required)
-						.setAutocomplete(!!option.autocomplete);
+					o.setName(name).setDescription(description).setRequired(!!option.required).setAutocomplete(!!option.autocomplete);
 					if ("minValue" in option) {
-						if (option.minValue != null)
-							o.setMinValue(option.minValue);
-						if (option.maxValue != null)
-							o.setMaxValue(option.maxValue);
+						if (option.minValue != null) o.setMinValue(option.minValue);
+						if (option.maxValue != null) o.setMaxValue(option.maxValue);
 					}
 					if ("choices" in option) {
 						if (option.choices != null)
@@ -285,25 +213,15 @@ function addOption(
 				break;
 
 			case ApplicationCommandOptionType.Role:
-				builder.addRoleOption(o =>
-					o
-						.setName(name)
-						.setDescription(description)
-						.setRequired(!!option.required)
-				);
+				builder.addRoleOption(o => o.setName(name).setDescription(description).setRequired(!!option.required));
 				break;
 
 			case ApplicationCommandOptionType.String:
 				builder.addStringOption(o => {
-					o.setName(name)
-						.setDescription(description)
-						.setRequired(!!option.required)
-						.setAutocomplete(!!option.autocomplete);
+					o.setName(name).setDescription(description).setRequired(!!option.required).setAutocomplete(!!option.autocomplete);
 					if ("minLength" in option) {
-						if (option.minLength != null)
-							o.setMinLength(option.minLength);
-						if (option.maxLength != null)
-							o.setMaxLength(option.maxLength);
+						if (option.minLength != null) o.setMinLength(option.minLength);
+						if (option.maxLength != null) o.setMaxLength(option.maxLength);
 					}
 					if ("choices" in option) {
 						if (option.choices != null)
@@ -319,12 +237,7 @@ function addOption(
 				break;
 
 			case ApplicationCommandOptionType.User:
-				builder.addUserOption(o =>
-					o
-						.setName(name)
-						.setDescription(description)
-						.setRequired(!!option.required)
-				);
+				builder.addUserOption(o => o.setName(name).setDescription(description).setRequired(!!option.required));
 				break;
 		}
 	}

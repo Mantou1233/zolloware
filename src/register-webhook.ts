@@ -5,9 +5,7 @@ import "dotenv/config";
 
 (async () => {
 	if (!process.env.TOKEN) {
-		console.error(
-			"Please configure your bot token in .env before registering webhook"
-		);
+		console.error("Please configure your bot token in .env before registering webhook");
 		process.exit(1);
 	}
 
@@ -27,9 +25,7 @@ import "dotenv/config";
 		})) as APIWebhook;
 
 		console.log(`Name: ${res.name}`);
-		console.log(
-			`URL: https://discord.com/api/webhooks/${res.id}/${res.token}`
-		);
+		console.log(`URL: https://discord.com/api/webhooks/${res.id}/${res.token}`);
 	} catch (err) {
 		console.error(err);
 		process.exit(1);

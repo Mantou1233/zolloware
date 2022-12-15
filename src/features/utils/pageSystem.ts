@@ -1,18 +1,7 @@
 import { ActionRowBuilder, SelectMenuBuilder } from "@discordjs/builders";
-import {
-	APISelectMenuOption,
-	ButtonBuilder,
-	ButtonStyle,
-	ComponentType,
-	InteractionCollector,
-	SelectMenuInteraction
-} from "discord.js";
+import { APISelectMenuOption, ButtonBuilder, ButtonStyle, ComponentType, InteractionCollector, SelectMenuInteraction } from "discord.js";
 import { PageSystemMode } from "../../utils/enums.js";
-import {
-	PageSystemDescriptionOptions,
-	PageSystemEmbedFieldOptions,
-	PageSystemPagesOptions
-} from "../../utils/interfaces.js";
+import { PageSystemDescriptionOptions, PageSystemEmbedFieldOptions, PageSystemPagesOptions } from "../../utils/interfaces.js";
 import { PageSystemOptions } from "../../utils/types.js";
 import fixedDigits from "./fixedDigits.js";
 import randomInt from "./randomInt.js";
@@ -22,47 +11,25 @@ import randomInt from "./randomInt.js";
  * @param options 選項
  * @returns 使用者選擇的值（如有）
  */
-export default async function pageSystem(
-	options: PageSystemDescriptionOptions
-): Promise<PageSystemPagesOptions | null>;
-export default async function pageSystem(
-	options: PageSystemEmbedFieldOptions
-): Promise<null>;
-export default async function pageSystem(
-	options: PageSystemOptions
-): Promise<PageSystemPagesOptions | null> {
-	const {
-		mode,
-		source,
-		embed,
-		description,
-		thumbnails = [],
-		extendFooter,
-		pages,
-		contents
-	} = options;
+export default async function pageSystem(options: PageSystemDescriptionOptions): Promise<PageSystemPagesOptions | null>;
+export default async function pageSystem(options: PageSystemEmbedFieldOptions): Promise<null>;
+export default async function pageSystem(options: PageSystemOptions): Promise<PageSystemPagesOptions | null> {
+	const { mode, source, embed, description, thumbnails = [], extendFooter, pages, contents } = options;
 	let { index = 0 } = options;
-	const allowSelect =
-		"allowSelect" in options ? options.allowSelect ?? false : false;
+	const allowSelect = "allowSelect" in options ? options.allowSelect ?? false : false;
 
 	// 根據模式設定 description
 	if (mode === PageSystemMode.Description) {
 		let newDescription = description ? `${description}\n\n` : "";
-		newDescription += pages[index]
-			.map((a, i) => `\`${fixedDigits(i + 1, 2)}.\` ${a.name}`)
-			.join("\n\n");
+		newDescription += pages[index].map((a, i) => `\`${fixedDigits(i + 1, 2)}.\` ${a.name}`).join("\n\n");
 		embed.setDescription(newDescription);
 	} else {
 		embed.setDescription(description || null).setFields(pages[index]);
 	}
 
 	// 設定其他 embed 屬性
-	let footer = `${source.user.tag}．第 ${index + 1} 頁／共 ${
-		pages.length
-	} 頁${extendFooter ? `｜${extendFooter}` : ""}`;
-	embed
-		.setThumbnail(thumbnails[index] || null)
-		.setFooter({ text: footer, iconURL: source.user.displayAvatarURL() });
+	let footer = `${source.user.tag}．第 ${index + 1} 頁／共 ${pages.length} 頁${extendFooter ? `｜${extendFooter}` : ""}`;
+	embed.setThumbnail(thumbnails[index] || null).setFooter({ text: footer, iconURL: source.user.displayAvatarURL() });
 
 	// 製作按鈕
 	const buttons = newButtons(pages.length);
@@ -70,10 +37,7 @@ export default async function pageSystem(
 
 	const messageOptions = {
 		embeds: [embed],
-		components:
-			mode === PageSystemMode.Description && allowSelect
-				? [newSelectMenu(pages[index]), buttons]
-				: [buttons]
+		components: mode === PageSystemMode.Description && allowSelect ? [newSelectMenu(pages[index]), buttons] : [buttons]
 	};
 
 	const message = await source.update(messageOptions);
@@ -102,22 +66,17 @@ export default async function pageSystem(
 		if (interaction.customId === `page_prev`) index--;
 		if (interaction.customId === `page_next`) index++;
 		if (interaction.customId === `page_last`) index = pages.length - 1;
-		if (interaction.customId === `page_exit`)
-			return buttonCollector.stop("exit");
+		if (interaction.customId === `page_exit`) return buttonCollector.stop("exit");
 
 		if (mode === PageSystemMode.Description) {
 			let newDescription = description ? `${description}\n\n` : "";
-			newDescription += pages[index]
-				.map((a, i) => `\`${fixedDigits(i + 1, 2)}.\` ${a.name}`)
-				.join("\n\n");
+			newDescription += pages[index].map((a, i) => `\`${fixedDigits(i + 1, 2)}.\` ${a.name}`).join("\n\n");
 			embed.setDescription(newDescription);
 		} else {
 			embed.setFields(pages[index]);
 		}
 
-		footer = `${interaction.user.tag}．第 ${index + 1} 頁／共 ${
-			pages.length
-		} 頁${extendFooter ? `｜${extendFooter}` : ""}`;
+		footer = `${interaction.user.tag}．第 ${index + 1} 頁／共 ${pages.length} 頁${extendFooter ? `｜${extendFooter}` : ""}`;
 		embed.setThumbnail(thumbnails[index] || null).setFooter({
 			text: footer,
 			iconURL: interaction.user.displayAvatarURL()
@@ -127,10 +86,7 @@ export default async function pageSystem(
 
 		await interaction.editReply({
 			embeds: [embed],
-			components:
-				mode === PageSystemMode.Description && allowSelect
-					? [newSelectMenu(pages[index]), buttons]
-					: [buttons]
+			components: mode === PageSystemMode.Description && allowSelect ? [newSelectMenu(pages[index]), buttons] : [buttons]
 		});
 	});
 
@@ -166,11 +122,7 @@ export default async function pageSystem(
 		buttonCollector.once("end", async (_collected, reason) => {
 			selectCollector?.stop();
 
-			if (
-				reason.startsWith("selected_") &&
-				mode === PageSystemMode.Description
-			)
-				resolve(pages[index][+reason.slice("selected_".length)]);
+			if (reason.startsWith("selected_") && mode === PageSystemMode.Description) resolve(pages[index][+reason.slice("selected_".length)]);
 			else if (reason === "exit")
 				message.edit({
 					content: contents.exit,
@@ -196,40 +148,15 @@ export default async function pageSystem(
 function newButtons(pageCount: number): ActionRowBuilder<ButtonBuilder> {
 	const buttons: ButtonBuilder[] = [];
 	if (pageCount >= 1) {
-		buttons.push(
-			new ButtonBuilder()
-				.setCustomId("page_exit")
-				.setEmoji("880450475193946162")
-				.setStyle(ButtonStyle.Danger)
-		);
+		buttons.push(new ButtonBuilder().setCustomId("page_exit").setEmoji("880450475193946162").setStyle(ButtonStyle.Danger));
 	}
 	if (pageCount >= 2) {
-		buttons.unshift(
-			new ButtonBuilder()
-				.setCustomId("page_prev")
-				.setEmoji("880450475265261589")
-				.setStyle(ButtonStyle.Primary)
-		);
-		buttons.push(
-			new ButtonBuilder()
-				.setCustomId("page_next")
-				.setEmoji("880450475202314300")
-				.setStyle(ButtonStyle.Primary)
-		);
+		buttons.unshift(new ButtonBuilder().setCustomId("page_prev").setEmoji("880450475265261589").setStyle(ButtonStyle.Primary));
+		buttons.push(new ButtonBuilder().setCustomId("page_next").setEmoji("880450475202314300").setStyle(ButtonStyle.Primary));
 	}
 	if (pageCount >= 3) {
-		buttons.unshift(
-			new ButtonBuilder()
-				.setCustomId("page_home")
-				.setEmoji("880448441623380048")
-				.setStyle(ButtonStyle.Primary)
-		);
-		buttons.push(
-			new ButtonBuilder()
-				.setCustomId("page_last")
-				.setEmoji("880450475156176906")
-				.setStyle(ButtonStyle.Primary)
-		);
+		buttons.unshift(new ButtonBuilder().setCustomId("page_home").setEmoji("880448441623380048").setStyle(ButtonStyle.Primary));
+		buttons.push(new ButtonBuilder().setCustomId("page_last").setEmoji("880450475156176906").setStyle(ButtonStyle.Primary));
 	}
 	return new ActionRowBuilder<ButtonBuilder>().addComponents(...buttons);
 }
@@ -240,11 +167,7 @@ function newButtons(pageCount: number): ActionRowBuilder<ButtonBuilder> {
  * @param pageCount 總頁數
  * @param index 當前頁的駐標
  */
-function modifyButtons(
-	actionRow: ActionRowBuilder<ButtonBuilder>,
-	pageCount: number,
-	index: number
-): void {
+function modifyButtons(actionRow: ActionRowBuilder<ButtonBuilder>, pageCount: number, index: number): void {
 	if (pageCount === 1) return;
 	if (pageCount === 2) {
 		actionRow.components[0].setDisabled(index === 0); // 上一頁
@@ -262,9 +185,7 @@ function modifyButtons(
  * @param option 所有選項
  * @returns 動作列
  */
-function newSelectMenu(
-	option: PageSystemPagesOptions[]
-): ActionRowBuilder<SelectMenuBuilder> {
+function newSelectMenu(option: PageSystemPagesOptions[]): ActionRowBuilder<SelectMenuBuilder> {
 	const selectOptions: APISelectMenuOption[] = [];
 	for (let i = 0; i < option.length; i++) {
 		selectOptions.push({
@@ -273,10 +194,7 @@ function newSelectMenu(
 		});
 	}
 
-	const select = new SelectMenuBuilder()
-		.setCustomId("pageSystemSelect")
-		.setPlaceholder("請選擇一個選項")
-		.setOptions(selectOptions);
+	const select = new SelectMenuBuilder().setCustomId("pageSystemSelect").setPlaceholder("請選擇一個選項").setOptions(selectOptions);
 	return new ActionRowBuilder<SelectMenuBuilder>().addComponents(select);
 }
 

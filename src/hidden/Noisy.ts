@@ -29,12 +29,6 @@ export default class Noisy extends HiddenCommand {
 	}
 
 	public execute(message: Message): boolean {
-		return this.epicResponse(
-			message,
-			["QAQ"],
-			[
-				"我為什麼要憑空接受你的抱怨？你知道是你先說話我才會跟著說嗎？所以是你吵還是我吵？邏輯已死？"
-			]
-		);
+		return this.epicResponse(message, ["QAQ"], ["我為什麼要憑空接受你的抱怨？你知道是你先說話我才會跟著說嗎？所以是你吵還是我吵？邏輯已死？"]);
 	}
 }

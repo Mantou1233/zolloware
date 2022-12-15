@@ -17,11 +17,7 @@ import tempMessage from "../features/utils/tempMessage";
 /**
  * 把斜線指令與訊息融合的類別
  */
-export class Source<
-	T extends ChatInputCommandInteraction<"cached"> | Message<true> =
-		| ChatInputCommandInteraction<"cached">
-		| Message<true>
-> {
+export class Source<T extends ChatInputCommandInteraction<"cached"> | Message<true> = ChatInputCommandInteraction<"cached"> | Message<true>> {
 	/**
 	 * 來源
 	 */
@@ -78,11 +74,7 @@ export class Source<
 	 * @param channel 來源頻道
 	 * @param member 來源的觸發成員
 	 */
-	constructor(
-		source: T,
-		channel: GuildTextBasedChannel,
-		member: GuildMember
-	) {
+	constructor(source: T, channel: GuildTextBasedChannel, member: GuildMember) {
 		this.source = source;
 
 		this.channel = channel;
@@ -99,9 +91,7 @@ export class Source<
 	/**
 	 * **[Type Guard]** 來源是斜線指令
 	 */
-	public isChatInput(): this is Source<
-		ChatInputCommandInteraction<"cached">
-	> {
+	public isChatInput(): this is Source<ChatInputCommandInteraction<"cached">> {
 		return this.source instanceof ChatInputCommandInteraction<"cached">;
 	}
 
@@ -116,10 +106,7 @@ export class Source<
 	 * 來源是否已被延遲，若來源是訊息則永遠回傳 false
 	 */
 	public get deferred(): boolean {
-		return (
-			this.source instanceof ChatInputCommandInteraction &&
-			this.source.deferred
-		);
+		return this.source instanceof ChatInputCommandInteraction && this.source.deferred;
 	}
 
 	/**
@@ -132,9 +119,7 @@ export class Source<
 	 * @param options 上述函式的選項
 	 * @returns 上述函式的回傳值
 	 */
-	public async hide(
-		options?: InteractionDeferReplyOptions & { fetchReply: true }
-	): Promise<Message | InteractionResponse | void> {
+	public async hide(options?: InteractionDeferReplyOptions & { fetchReply: true }): Promise<Message | InteractionResponse | void> {
 		if (this.source instanceof ChatInputCommandInteraction) {
 			return this.source.deferReply({ ephemeral: true, ...options });
 		}
@@ -153,13 +138,8 @@ export class Source<
 	 * @param options 上述函式的選項
 	 * @returns 上述函式的回傳值
 	 */
-	public async defer(
-		options?: InteractionDeferReplyOptions & { fetchReply?: true }
-	): Promise<Message | InteractionResponse | void> {
-		if (
-			this.source instanceof ChatInputCommandInteraction &&
-			!this.source.deferred
-		) {
+	public async defer(options?: InteractionDeferReplyOptions & { fetchReply?: true }): Promise<Message | InteractionResponse | void> {
+		if (this.source instanceof ChatInputCommandInteraction && !this.source.deferred) {
 			return this.source.deferReply(options);
 		}
 	}
@@ -174,9 +154,7 @@ export class Source<
 	 * @param options 上述函式的選項
 	 * @returns 上述函式的回傳值
 	 */
-	public async temp(
-		options: string | MessageCreateOptions
-	): Promise<Message> {
+	public async temp(options: string | MessageCreateOptions): Promise<Message> {
 		if (this.source instanceof ChatInputCommandInteraction) {
 			return this.source.editReply(options);
 		}
@@ -193,9 +171,7 @@ export class Source<
 	 * @param options 上述函式的選項
 	 * @returns 上述函式的回傳值
 	 */
-	public async editReply(
-		options: string | MessagePayload | WebhookEditMessageOptions
-	): Promise<Message | void> {
+	public async editReply(options: string | MessagePayload | WebhookEditMessageOptions): Promise<Message | void> {
 		if (this.source instanceof ChatInputCommandInteraction) {
 			return this.source.editReply(options);
 		}
@@ -211,9 +187,7 @@ export class Source<
 	 * @param options 上述函式的選項
 	 * @returns 上述函式的回傳值
 	 */
-	public async update(
-		options: string | MessageCreateOptions
-	): Promise<Message> {
+	public async update(options: string | MessageCreateOptions): Promise<Message> {
 		if (this.source instanceof ChatInputCommandInteraction) {
 			return this.source.editReply(options);
 		}

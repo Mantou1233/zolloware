@@ -39,14 +39,12 @@ export class AutocompleteManager {
 	 * @param dirPath 要載入的目標資料夾
 	 */
 	public async load(dirPath: string): Promise<void> {
-		if (this.loaded)
-			throw new Error("Autocomplete has already been loaded.");
+		if (this.loaded) throw new Error("Autocomplete has already been loaded.");
 
 		const autocompleteFiles = fs.readdirSync(dirPath);
 		for (const file of autocompleteFiles) {
 			if (!file.endsWith(".js")) continue;
-			const func: (client: HZClient) => AutocompleteData =
-				require(path.join(dirPath, file)).default;
+			const func: (client: HZClient) => AutocompleteData = require(path.join(dirPath, file)).default;
 			this.data.set(file.slice(0, -3), func(this.client));
 		}
 
@@ -58,41 +56,30 @@ export class AutocompleteManager {
 	 * @param interaction 從 client#on('interactionCreate') 得到的指令互動
 	 */
 	public async onInteractionCreate(interaction: Interaction): Promise<void> {
-		if (interaction.type !== InteractionType.ApplicationCommandAutocomplete)
-			return;
+		if (interaction.type !== InteractionType.ApplicationCommandAutocomplete) return;
 		if (!interaction.inCachedGuild()) return;
 		if (interaction.user.blocked) return;
-		if (
-			this.client.devMode &&
-			interaction.guild.id !== constant.mainGuild.id
-		)
-			return;
+		if (this.client.devMode && interaction.guild.id !== constant.mainGuild.id) return;
 
 		let commandName = interaction.commandName;
-		if (interaction.options.getSubcommand(false))
-			commandName += "_" + interaction.options.getSubcommand(false);
+		if (interaction.options.getSubcommand(false)) commandName += "_" + interaction.options.getSubcommand(false);
 
 		const option = interaction.options.getFocused(true);
 
 		// 傳進來的字串可能不合文法，直接當成查無結果
 		let regExp: RegExp;
 		try {
-			regExp = new RegExp(
-				option.value.toLowerCase().split("").join(".*?")
-			);
+			regExp = new RegExp(option.value.toLowerCase().split("").join(".*?"));
 		} catch {
 			return interaction.respond([]);
 		}
 
 		// 選出符合正則表達式的選項
-		const result = this.data
-			.get(commandName)
-			?.[option.name]?.filter(({ name, devOnly }) => {
-				if (!regExp.test(name.toLowerCase())) return false;
-				if (devOnly && interaction.guild.id !== constant.devGuild.id)
-					return false;
-				return true;
-			});
+		const result = this.data.get(commandName)?.[option.name]?.filter(({ name, devOnly }) => {
+			if (!regExp.test(name.toLowerCase())) return false;
+			if (devOnly && interaction.guild.id !== constant.devGuild.id) return false;
+			return true;
+		});
 		if (!result) return interaction.respond([]);
 
 		// 依據相關性排序
@@ -114,8 +101,6 @@ export class AutocompleteManager {
 			return 0;
 		});
 
-		return interaction.respond(
-			result.slice(0, 10).map(({ name: n }) => ({ name: n, value: n }))
-		);
+		return interaction.respond(result.slice(0, 10).map(({ name: n }) => ({ name: n, value: n })));
 	}
 }

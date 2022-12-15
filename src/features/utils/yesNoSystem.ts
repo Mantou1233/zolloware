@@ -8,12 +8,7 @@ import randomInt from "./randomInt.js";
  * @param options 選項
  * @returns 使用者選出的結果，選擇是則回傳 `true`，否則回傳 `false`，閒置則回傳 `null`
  */
-export default async function yesNoSystem({
-	source,
-	messageOptions,
-	labels: [yes, no],
-	contents
-}: YesNoSystemOptions): Promise<boolean | null> {
+export default async function yesNoSystem({ source, messageOptions, labels: [yes, no], contents }: YesNoSystemOptions): Promise<boolean | null> {
 	messageOptions.components = [newButtons(yes, no)];
 
 	const message = await source.update(messageOptions);
@@ -69,14 +64,8 @@ export default async function yesNoSystem({
  */
 function newButtons(yes: string, no: string): ActionRowBuilder<ButtonBuilder> {
 	return new ActionRowBuilder<ButtonBuilder>().addComponents(
-		new ButtonBuilder()
-			.setCustomId("yesNo_yes")
-			.setLabel(yes)
-			.setStyle(ButtonStyle.Success),
-		new ButtonBuilder()
-			.setCustomId("yesNo_no")
-			.setLabel(no)
-			.setStyle(ButtonStyle.Danger)
+		new ButtonBuilder().setCustomId("yesNo_yes").setLabel(yes).setStyle(ButtonStyle.Success),
+		new ButtonBuilder().setCustomId("yesNo_no").setLabel(no).setStyle(ButtonStyle.Danger)
 	);
 }
 

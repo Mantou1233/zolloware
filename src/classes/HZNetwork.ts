@@ -73,8 +73,7 @@ export class HZNetwork extends EventEmitter {
 	 */
 	public async load(): Promise<void> {
 		if (this.client.devMode) return;
-		if (this.loaded)
-			throw new Error("HiZollo Network has already been loaded");
+		if (this.loaded) throw new Error("HiZollo Network has already been loaded");
 
 		for (const portNo of this.publicPortNo) {
 			this.ports.set(portNo, new Map());
@@ -84,19 +83,10 @@ export class HZNetwork extends EventEmitter {
 			.filter((channel): channel is TextChannel => {
 				if (channel.type !== ChannelType.GuildText) return false;
 				if (!channel.name.startsWith(this.portPrefix)) return false;
-				return this.publicPortNo.has(
-					channel.name.slice(config.bot.network.portPrefix.length)
-				);
+				return this.publicPortNo.has(channel.name.slice(config.bot.network.portPrefix.length));
 			})
 			.map(async channel => {
-				if (
-					!(
-						channel.guild.members.me?.permissions.has(
-							PermissionFlagsBits.ManageWebhooks
-						) && channel.guild.mfaLevel === GuildMFALevel.None
-					)
-				)
-					return;
+				if (!(channel.guild.members.me?.permissions.has(PermissionFlagsBits.ManageWebhooks) && channel.guild.mfaLevel === GuildMFALevel.None)) return;
 
 				const portNo = this.getPortNo(channel);
 				if (!portNo) return;
@@ -121,10 +111,7 @@ export class HZNetwork extends EventEmitter {
 		if (!portNo || message.channel.type !== ChannelType.GuildText) return;
 		if (!this.ports.get(portNo)?.has(message.channel.id)) return;
 
-		const helper = new EmbedBuilder().applyHiZolloSettings(
-			message.member,
-			"HiZollo Network 中心"
-		);
+		const helper = new EmbedBuilder().applyHiZolloSettings(message.member, "HiZollo Network 中心");
 
 		const content = message.cleanContent
 			.replace(/@everyone/g, `@\u200beveryone`)
@@ -146,18 +133,14 @@ export class HZNetwork extends EventEmitter {
 		message.attachments.each(a => {
 			attachments.push({
 				attachment: a.url,
-				name: a.spoiler
-					? `SPOILER_${a.name ?? "attachment"}`
-					: a.name ?? "attachment"
+				name: a.spoiler ? `SPOILER_${a.name ?? "attachment"}` : a.name ?? "attachment"
 			});
 			totalSize += a.size;
 		});
 
 		if (totalSize > 512 * 1024) {
 			message.delete();
-			helper.setDescription(
-				"訊息的總檔案大小已超過 512kb，請先將檔案壓縮再傳進 HiZollo Netwrok 中"
-			);
+			helper.setDescription("訊息的總檔案大小已超過 512kb，請先將檔案壓縮再傳進 HiZollo Netwrok 中");
 			tempMessage(message.channel, { embeds: [helper] }, 3);
 			return;
 		}
@@ -168,9 +151,7 @@ export class HZNetwork extends EventEmitter {
 		// 回覆
 		const reference: { content?: string; username?: string } = {};
 		if (message.reference?.messageId) {
-			const msg = await message.channel.messages.fetch(
-				message.reference.messageId
-			);
+			const msg = await message.channel.messages.fetch(message.reference.messageId);
 			if (msg) {
 				const text = msg.cleanContent
 					.replace(/@everyone/g, `@\u200beveryone`)
@@ -178,8 +159,7 @@ export class HZNetwork extends EventEmitter {
 					.replace(/\]\(/g, "]\u200b(")
 					.replace(/^> .+?\n/, ""); // 刪除回覆的回覆
 				reference.content = this.parseReply(text);
-				if (msg.attachments.size > 0)
-					reference.content += " <:attachment:875011591953874955>";
+				if (msg.attachments.size > 0) reference.content += " <:attachment:875011591953874955>";
 				reference.username = removeMd(msg.author.username);
 			}
 		}
@@ -189,14 +169,11 @@ export class HZNetwork extends EventEmitter {
 			await message.delete().catch(() => {});
 
 			let finalMessage = "";
-			if (reference.content?.length)
-				finalMessage += `> **${reference.username}**：${reference.content}\n`;
+			if (reference.content?.length) finalMessage += `> **${reference.username}**：${reference.content}\n`;
 			if (content.length) finalMessage += content;
 
 			if (finalMessage.length > 500) {
-				helper.setDescription(
-					"你的訊息已超過 500 字元的上限，請縮減訊息，避免洗版"
-				);
+				helper.setDescription("你的訊息已超過 500 字元的上限，請縮減訊息，避免洗版");
 				tempMessage(message.channel, { embeds: [helper] }, 3);
 				return;
 			}
@@ -243,14 +220,8 @@ export class HZNetwork extends EventEmitter {
 	 * @param oldChannel 從 client#on('channelUpdate') 得到的舊頻道
 	 * @param newChannel 從 client#on('channelUpdate') 得到的新頻道
 	 */
-	public async onChannelUpdate(
-		oldChannel: Channel,
-		newChannel: Channel
-	): Promise<void> {
-		const [oldPortNo, newPortNo] = [
-			this.getPortNo(oldChannel),
-			this.getPortNo(newChannel)
-		];
+	public async onChannelUpdate(oldChannel: Channel, newChannel: Channel): Promise<void> {
+		const [oldPortNo, newPortNo] = [this.getPortNo(oldChannel), this.getPortNo(newChannel)];
 		if (oldPortNo == newPortNo) return;
 
 		// 新頻道是 HiZollo Network 時，將其加入聯絡網中
@@ -309,11 +280,7 @@ export class HZNetwork extends EventEmitter {
 	 * @param options 要發送的訊息
 	 * @param isBroadcast 是否為官方全頻公告
 	 */
-	public async crosspost(
-		portNo: string,
-		options: WebhookCreateMessageOptions,
-		isBroadcast?: boolean
-	): Promise<void> {
+	public async crosspost(portNo: string, options: WebhookCreateMessageOptions, isBroadcast?: boolean): Promise<void> {
 		await this.client.shard?.broadcastEval(
 			async (client, { portNo, options }) => {
 				const webhooks = client.network.ports.get(portNo);
@@ -344,17 +311,11 @@ export class HZNetwork extends EventEmitter {
 	 * @param isInitialize 註冊頻道的動作是不是在初始化時執行
 	 * @returns 原有或新建立的 webhook，可能因為機器人權限不足而無法註冊
 	 */
-	private async registerChannel(
-		portNo: string,
-		channel: TextChannel,
-		isInitialize?: boolean
-	): Promise<Webhook | void> {
+	private async registerChannel(portNo: string, channel: TextChannel, isInitialize?: boolean): Promise<Webhook | void> {
 		const webhooks = await channel.fetchWebhooks().catch(() => {});
 		if (!webhooks) return;
 
-		const hznHooks = webhooks.filter(
-			hook => hook.name === this.webhookFormat(portNo)
-		);
+		const hznHooks = webhooks.filter(hook => hook.name === this.webhookFormat(portNo));
 
 		let hook: Webhook;
 		if (!hznHooks.size) {
@@ -401,8 +362,7 @@ export class HZNetwork extends EventEmitter {
 		if (channel.type !== ChannelType.GuildText) return;
 		if (channel.isThread()) return;
 		if (!channel.name.startsWith(this.portPrefix)) return;
-		if (!this.publicPortNo.has(channel.name.slice(this.portPrefix.length)))
-			return;
+		if (!this.publicPortNo.has(channel.name.slice(this.portPrefix.length))) return;
 		return channel.name.slice(this.portPrefix.length);
 	}
 
@@ -424,65 +384,30 @@ export class HZNetwork extends EventEmitter {
 		reply = reply.replace(/\n/g, " ");
 		const emojis = reply.match(/<(a)?:(\w{1,32}):(\d{17,19})>?/g) || [];
 		const emojiLength = emojis.join("").length - emojis.length;
-		return reply.length > 30 + emojiLength
-			? reply.substring(0, 30 + emojiLength) + "..."
-			: reply;
+		return reply.length > 30 + emojiLength ? reply.substring(0, 30 + emojiLength) + "..." : reply;
 	}
 
-	public on<K extends keyof HZNetworkEvents>(
-		event: K,
-		listener: (...args: HZNetworkEvents[K]) => Awaitable<void>
-	): this;
-	public on<S extends string | symbol>(
-		event: Exclude<S, keyof HZNetworkEvents>,
-		listener: (...args: any[]) => Awaitable<void>
-	): this;
-	public on(
-		event: string | symbol,
-		listener: (...args: any[]) => Awaitable<void>
-	): this {
+	public on<K extends keyof HZNetworkEvents>(event: K, listener: (...args: HZNetworkEvents[K]) => Awaitable<void>): this;
+	public on<S extends string | symbol>(event: Exclude<S, keyof HZNetworkEvents>, listener: (...args: any[]) => Awaitable<void>): this;
+	public on(event: string | symbol, listener: (...args: any[]) => Awaitable<void>): this {
 		return super.on(event, listener);
 	}
 
-	public once<K extends keyof HZNetworkEvents>(
-		event: K,
-		listener: (...args: HZNetworkEvents[K]) => Awaitable<void>
-	): this;
-	public once<S extends string | symbol>(
-		event: Exclude<S, keyof HZNetworkEvents>,
-		listener: (...args: any[]) => Awaitable<void>
-	): this;
-	public once(
-		event: string | symbol,
-		listener: (...args: any[]) => Awaitable<void>
-	): this {
+	public once<K extends keyof HZNetworkEvents>(event: K, listener: (...args: HZNetworkEvents[K]) => Awaitable<void>): this;
+	public once<S extends string | symbol>(event: Exclude<S, keyof HZNetworkEvents>, listener: (...args: any[]) => Awaitable<void>): this;
+	public once(event: string | symbol, listener: (...args: any[]) => Awaitable<void>): this {
 		return super.once(event, listener);
 	}
 
-	public emit<K extends keyof HZNetworkEvents>(
-		event: K,
-		...args: HZNetworkEvents[K]
-	): boolean;
-	public emit<S extends string | symbol>(
-		event: Exclude<S, keyof HZNetworkEvents>,
-		...args: unknown[]
-	): boolean;
+	public emit<K extends keyof HZNetworkEvents>(event: K, ...args: HZNetworkEvents[K]): boolean;
+	public emit<S extends string | symbol>(event: Exclude<S, keyof HZNetworkEvents>, ...args: unknown[]): boolean;
 	public emit(event: string | symbol, ...args: unknown[]): boolean {
 		return super.emit(event, ...args);
 	}
 
-	public off<K extends keyof HZNetworkEvents>(
-		event: K,
-		listener: (...args: HZNetworkEvents[K]) => Awaitable<void>
-	): this;
-	public off<S extends string | symbol>(
-		event: Exclude<S, keyof HZNetworkEvents>,
-		listener: (...args: any[]) => Awaitable<void>
-	): this;
-	public off(
-		event: string | symbol,
-		listener: (...args: any[]) => Awaitable<void>
-	): this {
+	public off<K extends keyof HZNetworkEvents>(event: K, listener: (...args: HZNetworkEvents[K]) => Awaitable<void>): this;
+	public off<S extends string | symbol>(event: Exclude<S, keyof HZNetworkEvents>, listener: (...args: any[]) => Awaitable<void>): this;
+	public off(event: string | symbol, listener: (...args: any[]) => Awaitable<void>): this {
 		return super.off(event, listener);
 	}
 }

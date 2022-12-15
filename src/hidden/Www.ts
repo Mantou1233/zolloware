@@ -11,12 +11,6 @@ export default class Www extends HiddenCommand {
 	}
 
 	public execute(message: Message): boolean {
-		return this.rareResponse(
-			message,
-			["w"],
-			["www"],
-			["wwwwww"],
-			["ŵŵwŴWMŴMWwwŴwMŵWŵMŴwŵŵŴ"]
-		);
+		return this.rareResponse(message, ["w"], ["www"], ["wwwwww"], ["ŵŵwŴWMŴMWwwŴwMŵWŵMŴwŵŵŴ"]);
 	}
 }

@@ -1,17 +1,5 @@
-import {
-	ChannelType,
-	Guild,
-	GuildTextBasedChannel,
-	PermissionsBitField,
-	VoiceBasedChannel,
-	VoiceState
-} from "discord.js";
-import {
-	AudioPlayer,
-	AudioPlayerStatus,
-	createAudioPlayer,
-	VoiceConnection
-} from "@discordjs/voice";
+import { ChannelType, Guild, GuildTextBasedChannel, PermissionsBitField, VoiceBasedChannel, VoiceState } from "discord.js";
+import { AudioPlayer, AudioPlayerStatus, createAudioPlayer, VoiceConnection } from "@discordjs/voice";
 import { HZClient } from "../../../classes/HZClient";
 import { GuildMusicManagerOptions } from "../../../utils/interfaces";
 import { YoutubeUtil } from "./YoutubeUtil";
@@ -105,14 +93,7 @@ export class GuildMusicManager {
 	 * 建立單個伺服器的音樂管家
 	 * @param options 設定參數
 	 */
-	constructor({
-		client,
-		view,
-		voiceChannel,
-		textChannel,
-		connection,
-		autoSuppress
-	}: GuildMusicManagerOptions) {
+	constructor({ client, view, voiceChannel, textChannel, connection, autoSuppress }: GuildMusicManagerOptions) {
 		this.client = client;
 		this.guild = voiceChannel.guild;
 		this.view = view;
@@ -152,10 +133,7 @@ export class GuildMusicManager {
 	 * @param keywordOrUrl 要查詢的關鍵字或歌曲的 Youtube 連結
 	 */
 	public async play(source: Source, keywordOrUrl: string): Promise<void> {
-		let resources:
-			| { stream: YouTubeStream; info: InfoData }[]
-			| { stream: YouTubeStream; info: InfoData }
-			| void;
+		let resources: { stream: YouTubeStream; info: InfoData }[] | { stream: YouTubeStream; info: InfoData } | void;
 
 		if (YoutubeUtil.isPlaylistUrl(keywordOrUrl)) {
 			resources = await this.parsePlaylistUrl(source, keywordOrUrl);
@@ -168,9 +146,7 @@ export class GuildMusicManager {
 
 		if (Array.isArray(resources)) {
 			await this.view.bulkAddedToQueue(source, resources.length);
-			const tracks = resources.map(
-				r => new Track({ requester: source.member, ...r })
-			);
+			const tracks = resources.map(r => new Track({ requester: source.member, ...r }));
 
 			if (!this.working) {
 				const firstTrack = tracks.shift() as Track;
@@ -239,15 +215,8 @@ export class GuildMusicManager {
 	 * @param track 歌曲
 	 */
 	private async _play(track: Track): Promise<void> {
-		if (
-			this.voiceChannel.type === ChannelType.GuildStageVoice &&
-			this.voiceState.suppress
-		) {
-			if (
-				!this.guild.members.me?.permissions.has(
-					PermissionsBitField.StageModerator
-				)
-			) {
+		if (this.voiceChannel.type === ChannelType.GuildStageVoice && this.voiceState.suppress) {
+			if (!this.guild.members.me?.permissions.has(PermissionsBitField.StageModerator)) {
 				await this.view.noPermOnStage(this.textChannel);
 				return;
 			}
@@ -261,10 +230,7 @@ export class GuildMusicManager {
 
 		await new Promise(() => {
 			this.player.once(AudioPlayerStatus.Idle, async () => {
-				if (
-					this.nowPlaying &&
-					this.nowPlaying?.loopState !== MusicLoopState.Normal
-				) {
+				if (this.nowPlaying && this.nowPlaying?.loopState !== MusicLoopState.Normal) {
 					await this.nowPlaying.renewResource();
 					this._play(this.nowPlaying);
 					if (this.nowPlaying.loopState === MusicLoopState.Again) {
@@ -279,12 +245,7 @@ export class GuildMusicManager {
 					this.working = false;
 
 					await this.controller.clear();
-					if (
-						this.voiceChannel.type ===
-							ChannelType.GuildStageVoice &&
-						!this.voiceState.suppress &&
-						this.autoSuppress
-					) {
+					if (this.voiceChannel.type === ChannelType.GuildStageVoice && !this.voiceState.suppress && this.autoSuppress) {
 						this.voiceState.setSuppressed(true);
 					}
 					if (!this.destroyed) {
@@ -304,13 +265,8 @@ export class GuildMusicManager {
 	 * @param url 播放清單的連結
 	 * @returns 播放清單中前 100 首歌曲的相關數據
 	 */
-	private async parsePlaylistUrl(
-		source: Source,
-		url: string
-	): Promise<{ stream: YouTubeStream; info: InfoData }[] | void> {
-		const playlist = await ytpl
-			.playlist_info(url, { incomplete: true })
-			.catch(() => {});
+	private async parsePlaylistUrl(source: Source, url: string): Promise<{ stream: YouTubeStream; info: InfoData }[] | void> {
+		const playlist = await ytpl.playlist_info(url, { incomplete: true }).catch(() => {});
 		if (!playlist) {
 			await this.view.invalidPlaylistUrl(source);
 			return;
@@ -339,10 +295,7 @@ export class GuildMusicManager {
 	 * @param url 影片的連結
 	 * @returns 這部影片的相關資料
 	 */
-	private async parseVideoUrl(
-		source: Source,
-		url: string
-	): Promise<{ stream: YouTubeStream; info: InfoData } | void> {
+	private async parseVideoUrl(source: Source, url: string): Promise<{ stream: YouTubeStream; info: InfoData } | void> {
 		const result = await this.fetchVideo(url).catch(console.error);
 		if (!result) {
 			await this.view.invalidVideoUrl(source);
@@ -357,13 +310,8 @@ export class GuildMusicManager {
 	 * @param keyword 使用者給出的關鍵字
 	 * @returns 使用者選出的影片的相關資料
 	 */
-	private async parseKeyword(
-		source: Source,
-		keyword: string
-	): Promise<{ stream: YouTubeStream; info: InfoData } | void> {
-		const videos = await ytpl
-			.search(keyword, { source: { youtube: "video" }, language: "zh" })
-			.catch(() => {});
+	private async parseKeyword(source: Source, keyword: string): Promise<{ stream: YouTubeStream; info: InfoData } | void> {
+		const videos = await ytpl.search(keyword, { source: { youtube: "video" }, language: "zh" }).catch(() => {});
 		if (!videos) {
 			await this.view.noSearchResult(source);
 			return;
@@ -389,15 +337,11 @@ export class GuildMusicManager {
 	 * @param url 影片的連結
 	 * @returns 這部影片的相關資料
 	 */
-	private async fetchVideo(
-		url: string
-	): Promise<{ stream: YouTubeStream; info: InfoData } | void> {
+	private async fetchVideo(url: string): Promise<{ stream: YouTubeStream; info: InfoData } | void> {
 		const info = await ytpl.video_basic_info(url).catch(() => {});
 		if (!info) return;
 
-		const stream = (await YoutubeUtil.getStream(url).catch(
-			() => {}
-		)) as YouTubeStream | void;
+		const stream = (await YoutubeUtil.getStream(url).catch(() => {})) as YouTubeStream | void;
 		if (!stream) return;
 
 		return { stream, info };

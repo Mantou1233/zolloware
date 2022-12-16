@@ -196,14 +196,14 @@ export class Translator extends null {
 	 * 指令分類－中文名稱對照表
 	 */
 	static readonly CommandTypeChinese: { [key in CommandType]: string } = Object.freeze({
-		[CommandType.Contact]: "聯繫",
+		// [CommandType.Contact]: "聯繫",
 		[CommandType.Developer]: "開發者專用",
 		[CommandType.Fun]: "娛樂",
-		[CommandType.SinglePlayerGame]: "單人遊戲",
-		[CommandType.MultiPlayerGame]: "多人遊戲",
+		// [CommandType.SinglePlayerGame]: "單人遊戲",
+		// [CommandType.MultiPlayerGame]: "多人遊戲",
 		[CommandType.Information]: "資訊",
 		[CommandType.Miscellaneous]: "雜項",
-		[CommandType.Network]: "聯絡網",
+		// [CommandType.Network]: "聯絡網",
 		[CommandType.SubcommandGroup]: "指令群",
 		[CommandType.Utility]: "功能"
 	});
@@ -214,14 +214,14 @@ export class Translator extends null {
 	static readonly CommandTypeChineseDescription: {
 		[key in CommandType]: string;
 	} = Object.freeze({
-		[CommandType.Contact]: "與 HiZollo 的開發者聯絡",
+		// [CommandType.Contact]: "與 HiZollo 的開發者聯絡",
 		[CommandType.Developer]: "開發者專用指令",
 		[CommandType.Fun]: "適合在聊天室跟朋友玩樂",
-		[CommandType.SinglePlayerGame]: "讓你在沒人的凌晨三點邊吃美味蟹堡邊玩遊戲",
-		[CommandType.MultiPlayerGame]: "跟伺服器上的夥伴一起玩遊戲",
+		// [CommandType.SinglePlayerGame]: "讓你在沒人的凌晨三點邊吃美味蟹堡邊玩遊戲",
+		// [CommandType.MultiPlayerGame]: "跟伺服器上的夥伴一起玩遊戲",
 		[CommandType.Information]: "顯示 HiZollo 的相關資訊",
 		[CommandType.Miscellaneous]: "開發者懶得分類的指令",
-		[CommandType.Network]: "查看 HiZollo 聯絡網的相關功能",
+		// [CommandType.Network]: "查看 HiZollo 聯絡網的相關功能",
 		[CommandType.SubcommandGroup]: "集合很多指令的指令",
 		[CommandType.Utility]: "HiZollo 多少還是會一些有用的功能好嗎"
 	});

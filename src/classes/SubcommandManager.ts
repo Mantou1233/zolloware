@@ -50,7 +50,7 @@ export class SubcommandManager {
 			type: CommandType.SubcommandGroup,
 			name: parent.name,
 			description: parent.description,
-			aliases: parent.aliases,
+			aliases: parent.alias,
 			data: group
 		});
 	}
@@ -67,11 +67,11 @@ export class SubcommandManager {
 		// 先找群組
 		const group = this.data.get(first) || this.data.find(g => !!g.aliases?.includes(first));
 		if (group) {
-			return second ? group.data.get(second) || group.data.find(c => !!c.aliases?.includes(second)) : group;
+			return second ? group.data.get(second) || group.data.find(c => !!c.alias?.includes(second)) : group;
 		}
 
 		// 再找捷徑，假設沒有 collision
-		return this.data.map(({ data }) => data.get(first) || data.find(c => !!c.aliases?.includes(first))).find(c => c);
+		return this.data.map(({ data }) => data.get(first) || data.find(c => !!c.alias?.includes(first))).find(c => c);
 	}
 
 	public each(fn: (value: SubcommandGroup, key: string, collection: Collection<string, SubcommandGroup>) => void): Collection<string, SubcommandGroup> {

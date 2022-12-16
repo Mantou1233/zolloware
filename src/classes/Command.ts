@@ -37,7 +37,7 @@ export abstract class Command<T = unknown> {
 	/**
 	 * 指令的替代用法
 	 */
-	public aliases?: string[];
+	public alias?: string[];
 
 	/**
 	 * 指令的選項
@@ -82,7 +82,7 @@ export abstract class Command<T = unknown> {
 		this.name = options.name;
 		this.description = options.description;
 		this.extraDescription = options.extraDescription;
-		this.aliases = options.aliases;
+		this.alias = options.aliases;
 		this.options = options.options;
 		this.argumentParseMethod = options.argumentParseMethod ?? {
 			type: ArgumentParseType.Split,

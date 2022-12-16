@@ -1,6 +1,8 @@
 import { Command } from "../classes/Command";
 import { Source } from "../classes/Source";
 import { CommandType } from "../typings/enums";
+import * as Facts from "../assets/facts";
+import randomElement from "./../services/randomElement";
 
 export default class Ping extends Command<[]> {
 	constructor() {
@@ -12,10 +14,10 @@ export default class Ping extends Command<[]> {
 		});
 	}
 
+	private facts = [...Facts.Anecdote, ...Facts.Discord, ...Facts.Human, ...Facts.Math, ...Facts.Nature, ...Facts.Subject, ...Facts.World];
+
 	public async execute(source: Source): Promise<void> {
 		await source.defer();
-		const message = await source.update("計算中……");
-		const ping = message.createdTimestamp - source.createdTimestamp;
-		await message.edit(`:information_source:｜Pong！機器人延遲為：${ping}ms，API 延遲為：${source.client.ws.ping}ms`);
+		await source.update(`${randomElement(this.facts)}`);
 	}
 }

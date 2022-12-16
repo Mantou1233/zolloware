@@ -231,7 +231,7 @@ export class CommandManager extends EventEmitter {
 		if (command instanceof Command) {
 			commandName = command.parent ? [command.parent, command.name] : [command.name, undefined];
 
-			const matchingNames = [command.name, ...(command.aliases ?? [])];
+			const matchingNames = [command.name, ...(command.alias ?? [])];
 			if (!matchingNames.includes(firstArg) && matchingNames.includes(secondArg)) {
 				rawArgs = rawArgs.slice(secondArg.length).trim();
 			}
@@ -352,7 +352,7 @@ export class CommandManager extends EventEmitter {
 		}
 
 		// 一般指令優先
-		const command = this.commands.get(first) || this.commands.find(c => !!c.aliases?.includes(first));
+		const command = this.commands.get(first) || this.commands.find(c => !!c.alias?.includes(first));
 		if (command) return command;
 
 		// 群組指令

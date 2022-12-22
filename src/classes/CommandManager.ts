@@ -4,7 +4,7 @@ import { EventEmitter } from "node:events";
 import { Awaitable, Collection, GuildMFALevel, Interaction, Message, PermissionFlagsBits } from "discord.js";
 import { Command } from "./Command";
 import { CommandParser } from "./CommandParser";
-import { HZClient } from "./HZClient";
+import { ExtendedClient } from "./ExtendedClient";
 import { Source } from "./Source";
 import config from "@root/config";
 import missingPermissions from "../services/missingPermissions";
@@ -22,7 +22,7 @@ export class CommandManager extends EventEmitter {
 	/**
 	 * 機器人的 client
 	 */
-	public client: HZClient;
+	public client: ExtendedClient;
 
 	/**
 	 * 一般指令
@@ -43,7 +43,7 @@ export class CommandManager extends EventEmitter {
 	 * 建立一個指令管家
 	 * @param client 機器人的 client
 	 */
-	constructor(client: HZClient) {
+	constructor(client: ExtendedClient) {
 		super();
 		this.client = client;
 		this.commands = new Collection();

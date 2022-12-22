@@ -3,7 +3,7 @@ import path from "node:path";
 import { Awaitable, Collection, Message, PermissionFlagsBits } from "discord.js";
 import { EventEmitter } from "node:events";
 import { MessageTrigger } from "./MessageTrigger";
-import { HZClient } from "./HZClient";
+import { ExtendedClient } from "./ExtendedClient";
 import missingPermissions from "../services/missingPermissions";
 import { HiddenCommandManagerEvents } from "../typings/interfaces";
 
@@ -15,7 +15,7 @@ export class MessageTriggerManager extends EventEmitter {
 	/**
 	 * 機器人的 client
 	 */
-	public client: HZClient;
+	public client: ExtendedClient;
 
 	/**
 	 * 所有隱藏指令
@@ -31,7 +31,7 @@ export class MessageTriggerManager extends EventEmitter {
 	 * 建立一個隱藏指令管家
 	 * @param client 機器人的 client
 	 */
-	constructor(client: HZClient) {
+	constructor(client: ExtendedClient) {
 		super();
 		this.client = client;
 		this.commands = new Collection();

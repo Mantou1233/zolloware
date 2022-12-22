@@ -5,7 +5,6 @@ import { ButtonManager } from "../classes/ButtonManager";
 import { CommandManager } from "../classes/CommandManager";
 import CooldownManager from "../classes/CooldownManager";
 import { MessageTriggerManager } from "../classes/MessageTriggerManager";
-import { HZNetwork } from "../classes/HZNetwork";
 import { SelectMenuManager } from "../classes/SelectMenuManager";
 import { WebhookLogger } from "../classes/WebhookLogger";
 import { ArgumentParseType, CommandManagerRejectReason, CommandOptionType } from "./enums";
@@ -122,12 +121,7 @@ declare module "discord.js" {
 		 * 冷卻系統管家
 		 */
 		cooldown: CooldownManager;
-
-		/**
-		 * Network 管家
-		 */
-		network: HZNetwork;
-
+		
 		/**
 		 * 用於記錄錯誤回報的 Webhook
 		 */
@@ -188,7 +182,7 @@ declare module "discord.js" {
 		setMemberFooter: (member: GuildMember | null, footerText?: string) => EmbedBuilder;
 		setUserAuthor: (user: User | null, authorText: string) => EmbedBuilder;
 		setUserFooter: (user: User | null, footerText?: string) => EmbedBuilder;
-		setHiZolloColor: () => EmbedBuilder;
+		setConfig: () => EmbedBuilder;
 	}
 
 	interface GuildMember {

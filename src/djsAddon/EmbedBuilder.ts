@@ -5,13 +5,13 @@ import randomInt from "../services/randomInt";
 Object.defineProperties(EmbedBuilder.prototype, {
 	applyHiZolloSettings: {
 		value: function (this: EmbedBuilder, member: GuildMember | null, authorText: string, footerText?: string): EmbedBuilder {
-			return this.setHiZolloColor()
+			return this.setConfig()
 				.setUserAuthor(member?.client.user ?? null, authorText)
 				.setMemberFooter(member, footerText);
 		}
 	},
 
-	setHiZolloColor: {
+	setConfig: {
 		value: function (this: EmbedBuilder): EmbedBuilder {
 			return this.setColor(0x94b4fa);
 		}

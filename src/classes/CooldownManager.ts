@@ -1,5 +1,5 @@
 import { CooldownManagerAddUserOptions, CooldownManagerMethodOptions } from "../typings/interfaces";
-import { HZClient } from "./HZClient";
+import { ExtendedClient } from "./ExtendedClient";
 
 /**
  * 跨分支的指令冷卻系統
@@ -8,7 +8,7 @@ export default class CooldownManager {
 	/**
 	 * 機器人的 client
 	 */
-	public client: HZClient;
+	public client: ExtendedClient;
 
 	/**
 	 * 指令名稱－（使用者 ID－冷卻結束時間戳）的鍵值對
@@ -24,7 +24,7 @@ export default class CooldownManager {
 	 * 建立一個冷卻系統管家
 	 * @param client 機器人的 client
 	 */
-	constructor(client: HZClient) {
+	constructor(client: ExtendedClient) {
 		this.client = client;
 		this.data = new Map();
 	}

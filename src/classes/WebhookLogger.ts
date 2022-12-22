@@ -1,7 +1,7 @@
 import { EmbedBuilder, Guild, Message, TextChannel, User, WebhookClient } from "discord.js";
 import config from "@root/config";
 import constant from "@root/constant.json";
-import { HZClient } from "./HZClient";
+import { ExtendedClient } from "./ExtendedClient";
 import { Source } from "./Source";
 
 /**
@@ -11,7 +11,7 @@ export class WebhookLogger {
 	/**
 	 * 機器人的 client
 	 */
-	public client: HZClient;
+	public client: ExtendedClient;
 
 	/**
 	 * 主要的記錄器
@@ -32,7 +32,7 @@ export class WebhookLogger {
 	 * 建立一個記錄器管家
 	 * @param client 機器人的 client
 	 */
-	constructor(client: HZClient) {
+	constructor(client: ExtendedClient) {
 		this.client = client;
 
 		this.mainLogger = new WebhookClient({

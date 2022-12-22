@@ -1,8 +1,8 @@
-import { HZClient } from "../classes/HZClient";
+import { ExtendedClient } from "../classes/ExtendedClient";
 import { CommandType } from "../typings/enums";
 import { AutocompleteData } from "../typings/types";
 
-export default function (client: HZClient): AutocompleteData {
+export default function (client: ExtendedClient): AutocompleteData {
 	return {
 		指令名稱: [
 			...client.commands.map((command, commandName) => {

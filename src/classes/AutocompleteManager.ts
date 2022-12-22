@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import constant from "@root/constant.json";
 import { AutocompleteData } from "../typings/types";
-import { HZClient } from "./HZClient";
+import { ExtendedClient } from "./ExtendedClient";
 import { Interaction, InteractionType } from "discord.js";
 
 /**
@@ -12,7 +12,7 @@ export class AutocompleteManager {
 	/**
 	 * 機器人的 client
 	 */
-	public client: HZClient;
+	public client: ExtendedClient;
 
 	/**
 	 * 斜線指令名稱－回應資訊的鍵值對
@@ -28,7 +28,7 @@ export class AutocompleteManager {
 	 * 建立自動匹配管家
 	 * @param client 機器人的 client
 	 */
-	constructor(client: HZClient) {
+	constructor(client: ExtendedClient) {
 		this.client = client;
 		this.data = new Map();
 		this.loaded = false;
@@ -44,7 +44,7 @@ export class AutocompleteManager {
 		const autocompleteFiles = fs.readdirSync(dirPath);
 		for (const file of autocompleteFiles) {
 			if (!file.endsWith(".js")) continue;
-			const func: (client: HZClient) => AutocompleteData = require(path.join(dirPath, file)).default;
+			const func: (client: ExtendedClient) => AutocompleteData = require(path.join(dirPath, file)).default;
 			this.data.set(file.slice(0, -3), func(this.client));
 		}
 

@@ -6,7 +6,6 @@ import config from "@root/config";
 import constant from "@root/constant.json";
 import getActivity from "../services/getActivity";
 import { HZClientOptions } from "../typings/interfaces";
-import { HZNetwork } from "./HZNetwork";
 import { AutocompleteManager } from "./AutocompleteManager";
 import { ButtonManager } from "./ButtonManager";
 import { SelectMenuManager } from "./SelectMenuManager";
@@ -20,7 +19,7 @@ import { MessageTriggerManager } from "./MessageTriggerManager";
  * 擴展的 client
  * @extends Client
  */
-export class HZClient extends Client {
+export class ExtendedClient extends Client {
 	/**
 	 * 建立一個擴展版 client
 	 * @param options
@@ -42,7 +41,6 @@ export class HZClient extends Client {
 		this.selectmenus = new SelectMenuManager(this);
 
 		this.cooldown = new CooldownManager(this);
-		this.network = new HZNetwork(this);
 
 		this.angryList = new Collection();
 
@@ -64,7 +62,7 @@ export class HZClient extends Client {
 	 * 初始化這個 client
 	 */
 	public async initialize(): Promise<void> {
-		await this.commands.load(path.join(__dirname, "../commands/"));
+		await this.commands.load(path.join(__dirname, "../commands"));
 		await this.triggers.load(path.join(__dirname, "../triggers"));
 		await this.autocomplete.load(path.join(__dirname, "../autocomplete"));
 		await this.buttons.load(path.join(__dirname, "../buttons"));

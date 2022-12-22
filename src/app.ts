@@ -9,9 +9,9 @@
 import { ApplicationCommandOptionType, EmbedBuilder, GatewayIntentBits, Options } from "discord.js";
 import "./djsAddon";
 import config from "@root/config";
-import { HZClient } from "./classes/HZClient";
+import { ExtendedClient } from "./classes/ExtendedClient";
 import { CommandManagerRejectReason, CommandParserOptionResultStatus } from "./typings/enums";
-const client = new HZClient({
+const client = new ExtendedClient({
 	intents: [
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
@@ -178,30 +178,6 @@ client.triggers.on("executed", (message, commandName) => {
 });
 /**/
 
-/******************* Network 全頻廣播 *******************/
-client.network.on("broadcast", (portNo, content) => {
-	client.logger.networkBroadcast(portNo, content);
-});
-/**/
-
-/******************* Network 傳輸訊息 *******************/
-client.network.on("crosspost", (portNo, guild, author) => {
-	client.logger.networkCrossPost(portNo, guild, author);
-});
-/**/
-
-/******************* Network 新增頻道 *******************/
-client.network.on("joined", (portNo, channel) => {
-	client.logger.networkJoined(portNo, channel);
-});
-/**/
-
-/******************* Network 刪除頻道 *******************/
-client.network.on("left", (portNo, channel) => {
-	client.logger.networkLeft(portNo, channel);
-});
-/**/
-
 /******************* 上線確認 *******************/
 client.on("ready", () => {
 	client.logger.ready();
@@ -216,9 +192,6 @@ client.on("error", error => {
 client.commands.on("error", (_commandName, error) => {
 	client.logger.error(error);
 });
-client.network.on("error", error => {
-	client.logger.error(error);
-});
 process.on("uncaughtException", error => {
 	client.logger.error(error);
 });
@@ -231,7 +204,6 @@ client.on("messageCreate", message => {
 	client.poll(message);
 	client.commands.onMessageCreate(message);
 	client.triggers.onMessageCreate(message);
-	client.network.onMessageCreate(message);
 });
 /**/
 
@@ -244,35 +216,15 @@ client.on("interactionCreate", interaction => {
 });
 /**/
 
-/******************* 建立頻道 *******************/
-client.on("channelCreate", channel => {
-	client.network.onChannelCreate(channel);
-});
-/**/
-
-/******************* 更新頻道 *******************/
-client.on("channelUpdate", (oldChannel, newChannel) => {
-	client.network.onChannelUpdate(oldChannel, newChannel);
-});
-/**/
-
-/******************* 刪除頻道 *******************/
-client.on("channelDelete", channel => {
-	client.network.onChannelDelete(channel);
-});
-/**/
-
 /******************* 加入伺服器 *******************/
 client.on("guildCreate", guild => {
 	client.logger.joinGuild(guild);
-	client.network.onGuildCreate(guild);
 });
 /**/
 
 /******************* 刪除伺服器 *******************/
 client.on("guildDelete", guild => {
 	client.logger.leaveGuild(guild);
-	client.network.onGuildDelete(guild);
 });
 /**/
 

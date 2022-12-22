@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { Collection } from "discord.js";
 import { Command } from "./Command";
-import { HZClient } from "./HZClient";
+import { ExtendedClient } from "./ExtendedClient";
 import { SubcommandGroup } from "../typings/interfaces";
 import { CommandType } from "../typings/enums";
 
@@ -13,7 +13,7 @@ export class SubcommandManager {
 	/**
 	 * 機器人的 client
 	 */
-	public client: HZClient;
+	public client: ExtendedClient;
 
 	/**
 	 * 群組名稱－指令群的鍵值對
@@ -24,7 +24,7 @@ export class SubcommandManager {
 	 * 建立一個群組指令管家
 	 * @param client 機器人的 client
 	 */
-	constructor(client: HZClient) {
+	constructor(client: ExtendedClient) {
 		this.client = client;
 		this.data = new Collection();
 	}

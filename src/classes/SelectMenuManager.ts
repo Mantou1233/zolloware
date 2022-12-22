@@ -2,7 +2,7 @@ import { Interaction, InteractionType, SelectMenuInteraction } from "discord.js"
 import fs from "node:fs";
 import path from "node:path";
 import constant from "@root/constant.json";
-import { HZClient } from "./HZClient";
+import { ExtendedClient } from "./ExtendedClient";
 
 /**
  * 掌管所有的永久選單
@@ -11,7 +11,7 @@ export class SelectMenuManager {
 	/**
 	 * 機器人的 client
 	 */
-	public client: HZClient;
+	public client: ExtendedClient;
 
 	/**
 	 * 選單識別ID－回應方式的鍵值對
@@ -27,7 +27,7 @@ export class SelectMenuManager {
 	 * 建立永久選單的管家
 	 * @param client 機器人的 client
 	 */
-	constructor(client: HZClient) {
+	constructor(client: ExtendedClient) {
 		this.client = client;
 		this.data = new Map();
 		this.loaded = false;

@@ -46,7 +46,7 @@ import { Translator } from "./classes/Translator";
 /******************* 指令失敗 *******************/
 client.commands.on("reject", async (source, info) => {
 	await source.defer({ ephemeral: true });
-	const helper = new EmbedBuilder().applyHiZolloSettings(source.member, "HiZollo 的幫助中心");
+	const helper = new EmbedBuilder().applySettings(source.member, "HiZollo 的幫助中心");
 
 	switch (info.reason) {
 		case CommandManagerRejectReason.Angry:

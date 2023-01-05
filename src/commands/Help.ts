@@ -90,7 +90,7 @@ export default class Help extends Command<[string]> {
 
 	public getEmbedsForAllTypes(source: Source): EmbedBuilder[] {
 		const embed = new EmbedBuilder()
-			.applyHiZolloSettings(source.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
+			.applySettings(source.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
 			.setDescription(`以下是我的指令列表，你可以使用 \`${config.bot.prefix}help 指令名稱\` 或 \`/help 指令名稱\` 來查看特定指令的使用方法`)
 			.setThumbnail(source.client.user?.displayAvatarURL({ extension: "png", size: 2048 }) ?? null);
 
@@ -158,7 +158,7 @@ export default class Help extends Command<[string]> {
 
 		return [
 			new EmbedBuilder()
-				.applyHiZolloSettings(interaction.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
+				.applySettings(interaction.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
 				.setDescription(description)
 				.setThumbnail(interaction.client.user?.displayAvatarURL({ extension: "png", size: 2048 }) ?? null)
 		];
@@ -166,14 +166,14 @@ export default class Help extends Command<[string]> {
 
 	public getEmbedForCommand(source: { client: Client; member: GuildMember }, command: Command): EmbedBuilder {
 		return new EmbedBuilder()
-			.applyHiZolloSettings(source.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
+			.applySettings(source.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
 			.setDescription(this.getDescriptionForCommand(command))
 			.setThumbnail(source.client.user?.displayAvatarURL({ extension: "png", size: 2048 }) ?? null);
 	}
 
 	public getEmbedForSubcommandGroup(source: { client: Client; member: GuildMember }, groupName: string, commands: SubcommandGroup): EmbedBuilder {
 		const embed = new EmbedBuilder()
-			.applyHiZolloSettings(source.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
+			.applySettings(source.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
 			.setDescription(`這是 HiZollo 的 ${groupName} 指令清單`)
 			.setThumbnail(source.client.user?.displayAvatarURL({ extension: "png", size: 2048 }) ?? null);
 

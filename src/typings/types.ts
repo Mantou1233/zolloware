@@ -1,5 +1,4 @@
 import { ApplicationCommandOptionData, ApplicationCommandSubCommandData, ApplicationCommandSubGroupData, Collection, PermissionFlags } from "discord.js";
-import { Client as Osu } from "@hizollo/osu-api";
 import { AutocompleteManager } from "../classes/AutocompleteManager";
 import { ButtonManager } from "../classes/ButtonManager";
 import { CommandManager } from "../classes/CommandManager";
@@ -162,12 +161,7 @@ declare module "discord.js" {
 		 * 取得伺服器總數
 		 */
 		guildCount(): Promise<number>;
-
-		/**
-		 * osu! 的 API
-		 */
-		osu: Osu;
-
+		
 		/**
 		 * 要完整使用 HiZollo 所需的最少量權限
 		 */
@@ -175,7 +169,7 @@ declare module "discord.js" {
 	}
 
 	interface EmbedBuilder {
-		applyHiZolloSettings: (member: GuildMember | null, authorText: string, footerText?: string) => EmbedBuilder;
+		applySettings: (member: GuildMember | null, authorText: string, footerText?: string) => EmbedBuilder;
 		setMemberAuthor: (member: GuildMember | null, authorText: string) => EmbedBuilder;
 		setMemberFooter: (member: GuildMember | null, footerText?: string) => EmbedBuilder;
 		setUserAuthor: (user: User | null, authorText: string) => EmbedBuilder;

@@ -67,7 +67,6 @@ export class ExtendedClient extends Client {
 		await this.autocomplete.load(path.join(__dirname, "../autocomplete"));
 		await this.buttons.load(path.join(__dirname, "../buttons"));
 		await this.selectmenus.load(path.join(__dirname, "../selectmenus"));
-		await this.network.load();
 		this.user?.setActivity(await getActivity(this));
 	}
 

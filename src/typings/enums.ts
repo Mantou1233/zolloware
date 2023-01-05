@@ -15,7 +15,6 @@ export enum CommandManagerRejectReason {
 	BotMissingPermission,
 	UserMissingPermission,
 	InCooldown,
-	InNetwork,
 	IllegalArgument
 }
 

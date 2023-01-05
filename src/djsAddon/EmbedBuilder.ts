@@ -3,7 +3,7 @@ import config from "@root/config";
 import randomInt from "../services/randomInt";
 
 Object.defineProperties(EmbedBuilder.prototype, {
-	applyHiZolloSettings: {
+	applySettings: {
 		value: function (this: EmbedBuilder, member: GuildMember | null, authorText: string, footerText?: string): EmbedBuilder {
 			return this.setConfig()
 				.setUserAuthor(member?.client.user ?? null, authorText)

@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionData, ApplicationCommandSubCommandData, ApplicationCommandSubGroupData, Collection, PermissionFlags } from "discord.js";
+import { ApplicationCommandOptionData, ApplicationCommandSubCommandData, ApplicationCommandSubGroupData, PermissionFlags } from "discord.js";
 import { AutocompleteManager } from "../classes/AutocompleteManager";
 import { ButtonManager } from "../classes/ButtonManager";
 import { CommandManager } from "../classes/CommandManager";
@@ -33,7 +33,6 @@ export type CommandParserFailResult = { index: number } & Exclude<CommandParserO
 export type CommandParserResult = CommandParserPassResult | CommandParserFailResult;
 
 export type CommandManagerRejectInfo =
-	| { reason: CommandManagerRejectReason.Angry; args: [time: number] }
 	| { reason: CommandManagerRejectReason.TwoFactorRequired; args: [] }
 	| {
 			reason: CommandManagerRejectReason.BotMissingPermission;
@@ -46,10 +45,10 @@ export type CommandManagerRejectInfo =
 	| { reason: CommandManagerRejectReason.InCooldown; args: [time: number] }
 	| {
 			reason: CommandManagerRejectReason.IllegalArgument;
-			args: [commandName: [string, string | undefined], commandOptions: HZCommandOptionData[], result: CommandParserFailResult];
+			args: [commandName: [string, string | undefined], commandOptions: ExtendedCommandOptionData[], result: CommandParserFailResult];
 	  };
 
-export type HZCommandOptionData = Exclude<ApplicationCommandOptionData, ApplicationCommandSubCommandData | ApplicationCommandSubGroupData> & {
+export type ExtendedCommandOptionData = Exclude<ApplicationCommandOptionData, ApplicationCommandSubCommandData | ApplicationCommandSubGroupData> & {
 	parseAs?: CommandOptionType;
 	repeat?: boolean;
 };
@@ -133,17 +132,6 @@ declare module "discord.js" {
 		 * 用於記錄開發者回覆的 Webhook
 		 */
 		replyHook: WebhookClient;
-
-		/**
-		 * 被 HiZollo 討厭的使用者 ID－氣消時間
-		 */
-		angryList: Collection<string, number>;
-
-		/**
-		 * HiZollo 是否正在生某個使用者的氣
-		 * @param userId 指定的使用者
-		 */
-		isAngryAt(userId: string): Promise<number>;
 
 		/**
 		 * 暫時封鎖一名使用者

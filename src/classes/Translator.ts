@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType } from "discord.js";
 import { CommandOptionType, CommandType } from "../typings/enums";
-import { HZCommandOptionData } from "../typings/types";
+import { ExtendedCommandOptionData } from "../typings/types";
 
 /**
  * 掌管常數與字串的轉換
@@ -71,7 +71,7 @@ export class Translator extends null {
 	 * @param option 選項
 	 * @returns 中文型別
 	 */
-	static getCommandOptionTypeChinese(option: HZCommandOptionData): string {
+	static getCommandOptionTypeChinese(option: ExtendedCommandOptionData): string {
 		if (option.parseAs) {
 			return this.CommandOptionTypeChinese[option.parseAs];
 		}

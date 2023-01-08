@@ -49,10 +49,6 @@ client.commands.on("reject", async (source, info) => {
 	const helper = new EmbedBuilder().applySettings(source.member, "HiZollo 的幫助中心");
 
 	switch (info.reason) {
-		case CommandManagerRejectReason.Angry:
-			helper.setTitle("(ﾒﾟДﾟ)ﾒ").setDescription(`你就是剛剛丟我的那個人！我才不想理你勒，你 ${~~(info.args[0] / 1000)} 秒之後再來跟我談！`);
-			break;
-
 		case CommandManagerRejectReason.TwoFactorRequired:
 			helper.setTitle("2FA 不讓我執行這個指令").setDescription(`因為這個伺服器開啟了 2FA 驗證，所以我無法執行這個指令`);
 			break;

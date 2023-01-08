@@ -9,12 +9,12 @@ import {
 import emojiRegex from "emoji-regex";
 import { ArgumentParseType, CommandOptionType, CommandParserOptionResultStatus } from "../typings/enums";
 import { CommandParserOptionResult, CommandParserResult } from "../typings/types";
-import { ArgumentParseMethod, HZCommandOptionData } from "../typings/types";
+import { ArgumentParseMethod, ExtendedCommandOptionData } from "../typings/types";
 import { Command } from "./Command";
 
 type ParseMessageOptionFunctions = {
 	[key in ApplicationCommandOptionType]: (data: {
-		data: HZCommandOptionData;
+		data: ExtendedCommandOptionData;
 		message: Message;
 		preParsedArgs: string[];
 		attachments: Attachment[];
@@ -24,7 +24,7 @@ type ParseMessageOptionFunctions = {
 type ParseSlashOptionFunctions = {
 	[key in ApplicationCommandOptionType]: (data: {
 		interaction: ChatInputCommandInteraction;
-		data: HZCommandOptionData;
+		data: ExtendedCommandOptionData;
 		optionName?: string;
 	}) => Promise<CommandParserOptionResult>;
 };

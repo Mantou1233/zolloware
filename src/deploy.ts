@@ -13,7 +13,7 @@ import config from "@root/config";
 import constant from "@root/constant.json";
 import { Command } from "./classes/Command";
 import { CommandType } from "./typings/enums";
-import { HZCommandOptionData } from "./typings/types";
+import { ExtendedCommandOptionData } from "./typings/types";
 import { Translator } from "./classes/Translator";
 
 (async () => {
@@ -145,7 +145,7 @@ function parseSubcommand(command: Command): SlashCommandSubcommandBuilder {
  * @param builder 建築師本人
  * @param option 從 {@link Command} 來的選項
  */
-function addOption(builder: SlashCommandBuilder | SlashCommandSubcommandBuilder, option: HZCommandOptionData): void {
+function addOption(builder: SlashCommandBuilder | SlashCommandSubcommandBuilder, option: ExtendedCommandOptionData): void {
 	for (let i = 1; i <= (option.repeat ? 5 : 1); i++) {
 		const name = option.name.replaceAll("%i", `${i}`);
 		const description = option.description.replaceAll("%i", `${i}`);

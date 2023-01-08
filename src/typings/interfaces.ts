@@ -14,7 +14,7 @@ import {
 } from "discord.js";
 import { Source } from "../classes/Source";
 import { CommandParserOptionResultStatus, CommandType, PageSystemMode } from "./enums";
-import { ArgumentParseMethod, HZCommandOptionData } from "./types";
+import { ArgumentParseMethod, ExtendedCommandOptionData } from "./types";
 import { Command } from "../classes/Command";
 
 export interface SubcommandGroup {
@@ -83,7 +83,7 @@ export interface CommandOptions {
 	description: string;
 	extraDescription?: string;
 	aliases?: string[];
-	options?: HZCommandOptionData[];
+	options?: ExtendedCommandOptionData[];
 	argumentParseMethod?: ArgumentParseMethod;
 	cooldown?: number;
 	permissions?: CommandPermission;

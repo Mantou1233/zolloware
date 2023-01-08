@@ -2,7 +2,7 @@ import { ChatInputCommandInteraction, GuildMember, GuildTextBasedChannel, Messag
 import { Source } from "./Source";
 import { ArgumentParseType, CommandType } from "../typings/enums";
 import { CommandOptions, CommandPermission } from "../typings/interfaces";
-import { ArgumentParseMethod, HZCommandOptionData } from "../typings/types";
+import { ArgumentParseMethod, ExtendedCommandOptionData } from "../typings/types";
 
 /**
  * 一個指令的藍圖
@@ -42,7 +42,7 @@ export abstract class Command<T = unknown> {
 	/**
 	 * 指令的選項
 	 */
-	public options?: HZCommandOptionData[];
+	public options?: ExtendedCommandOptionData[];
 
 	/**
 	 * 訊息指令中解析訊息內容的方法

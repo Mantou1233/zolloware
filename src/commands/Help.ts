@@ -16,7 +16,7 @@ import config from "@root/config";
 import { Command } from "../classes/Command";
 import { Source } from "../classes/Source";
 import { CommandType } from "../typings/enums";
-import { HZCommandOptionData } from "../typings/types";
+import { ExtendedCommandOptionData } from "../typings/types";
 import { SubcommandGroup } from "../typings/interfaces";
 import { Translator } from "../classes/Translator";
 
@@ -25,7 +25,7 @@ export default class Help extends Command<[string]> {
 		super({
 			type: CommandType.Information,
 			name: "help",
-			description: "顯示 HiZollo 的指令清單或查詢指令用法",
+			description: "顯示 Zolloware 的指令清單或查詢指令用法",
 			options: [
 				{
 					type: ApplicationCommandOptionType.String,
@@ -195,7 +195,7 @@ export default class Help extends Command<[string]> {
 		return description;
 	}
 
-	private optionsToString(options: HZCommandOptionData[]): string {
+	private optionsToString(options: ExtendedCommandOptionData[]): string {
 		let description = "";
 		description += `\`${options.map(option => this.getOptionNameString(option)).join(" ")}\`\n`;
 		for (const option of options) {
@@ -219,7 +219,7 @@ export default class Help extends Command<[string]> {
 		return description;
 	}
 
-	private getOptionNameString(option: HZCommandOptionData): string {
+	private getOptionNameString(option: ExtendedCommandOptionData): string {
 		const pattern = option.required ? `[${option.name}]` : `<${option.name}>`;
 		if (!option.repeat) return pattern;
 		return `${pattern.replace(/\%i/g, "1")} ${pattern.replace(/\%i/g, "2")} ...`;

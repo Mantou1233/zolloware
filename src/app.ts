@@ -16,8 +16,8 @@ const client = new ExtendedClient({
 		GatewayIntentBits.Guilds,
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.GuildMessageReactions,
-		GatewayIntentBits.GuildVoiceStates,
-		GatewayIntentBits.MessageContent
+		GatewayIntentBits.GuildVoiceStates
+		// GatewayIntentBits.MessageContent
 	],
 	makeCache: Options.cacheWithLimits({
 		...Options.DefaultMakeCacheSettings,

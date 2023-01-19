@@ -103,17 +103,6 @@ export class CommandManager extends EventEmitter {
 
 		if (command.type === CommandType.Developer && !channel.isTestChannel()) return;
 
-		/***** 檢查 HiZollo 有沒有被該使用者丟到生氣 *****/
-		const angryEndtime = await this.client.isAngryAt(interaction.user.id);
-		if (angryEndtime > 0) {
-			this.emit("reject", new Source(interaction, channel, member), {
-				reason: CommandManagerRejectReason.Angry,
-				args: [angryEndtime]
-			});
-			return;
-		}
-		/**/
-
 		/***** 檢查執行權限 *****/
 		if (command.twoFactorRequired && interaction.guild.mfaLevel === GuildMFALevel.Elevated) {
 			this.emit("reject", new Source(interaction, channel, member), {
@@ -232,17 +221,6 @@ export class CommandManager extends EventEmitter {
 		}
 
 		if (command.type === CommandType.Developer && !message.channel.isTestChannel()) return;
-
-		/***** 檢查 HiZollo 有沒有被該使用者丟到生氣 *****/
-		const angryEndtime = await message.client.isAngryAt(message.author.id);
-		if (angryEndtime > 0) {
-			this.emit("reject", new Source(message, channel, member), {
-				reason: CommandManagerRejectReason.Angry,
-				args: [angryEndtime]
-			});
-			return;
-		}
-		/**/
 
 		/***** 檢查執行權限 *****/
 		if (command.twoFactorRequired && message.guild.mfaLevel === GuildMFALevel.Elevated) {

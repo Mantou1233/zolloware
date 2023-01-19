@@ -1,5 +1,5 @@
 import path from "node:path";
-import { Client, Collection, Message, MessageReaction, PermissionFlagsBits, PermissionsBitField, WebhookClient } from "discord.js";
+import { Client, Message, MessageReaction, PermissionFlagsBits, PermissionsBitField, WebhookClient } from "discord.js";
 import { CommandManager } from "./CommandManager";
 import CooldownManager from "./CooldownManager";
 import config from "@root/config";
@@ -41,8 +41,6 @@ export class ExtendedClient extends Client {
 		this.selectmenus = new SelectMenuManager(this);
 
 		this.cooldown = new CooldownManager(this);
-
-		this.angryList = new Collection();
 
 		this.bugHook = new WebhookClient({
 			id: config.webhooks.bug.id,

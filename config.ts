@@ -13,11 +13,7 @@ export default {
 	bot: {
 		prefix: "<>",
 		id: Buffer.from(process.env.TOKEN.split(".")[0], "base64").toString("ascii"),
-		token: process.env.TOKEN,
-		network: {
-			namePrefix: "HIZOLLO",
-			portPrefix: "hz-network-"
-		}
+		token: process.env.TOKEN
 	},
 
 	webhooks: {

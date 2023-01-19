@@ -11,7 +11,7 @@ const replacers: { [key: string]: (source: Source, str: string) => string } = Ob
 				return "froggy";
 			}
 			case "fullname": {
-				return source.client.user?.username || ;
+				return source.client.user?.username || "o";
 			}
 		}
 		return str;
@@ -28,6 +28,6 @@ export default function placeholder(source: Source) {
 		for (let [key, value] of Object.entries(replacers)) {
 			str = str.replace(new RegExp(`/%${key}\.(.{1,})%/g`), (_origin, arg1, _n, _match) => value(source, arg1));
 		}
-        return str;
+		return str;
 	};
 }

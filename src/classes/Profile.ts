@@ -33,7 +33,8 @@ export class Profile<T extends { [key: string]: any } = { [key: string]: any }> 
 		this.__schema = schema;
 		this.__prefix = `${prefix}:`;
 	}
-	async init() {
+
+	public async init() {
 		const data = (await db.get(`${this.__prefix}${this.__id}`)) ?? -1;
 		if (data == -1) return this;
 		for (const [key, value] of Object.entries(data)) {
@@ -42,11 +43,11 @@ export class Profile<T extends { [key: string]: any } = { [key: string]: any }> 
 		return this;
 	}
 
-	async check(): Promise<boolean> {
+	public async check(): Promise<boolean> {
 		return (await db.get(`${this.__prefix}${this.__id}`)) ? true : false;
 	}
 
-	async checkAndUpdate(): Promise<true> {
+	public async checkAndUpdate(): Promise<true> {
 		if (!(await this.check())) {
 			await this.newSchema();
 		}
@@ -54,28 +55,28 @@ export class Profile<T extends { [key: string]: any } = { [key: string]: any }> 
 		return true;
 	}
 
-	get db() {
+	public get db() {
 		return db;
 	}
 
-	async newSchema() {
+	public async newSchema() {
 		if (!this.__schema) return false;
 		Object.assign(this, this.__schema);
 		return void this.save();
 	}
 
-	async updateSchema() {
+	public async updateSchema() {
 		if (!this.__schema) return false;
 		let raw = this.raw;
 		Object.assign(this, this.__schema, raw);
 		return this.save();
 	}
 
-	async save() {
+	public async save() {
 		return void (await db.set(`${this.__prefix}${this.__id}`, this.raw)) ?? this;
 	}
 
-	get raw() {
+	public get raw() {
 		const data = JSON.parse(JSON.stringify(this));
 		delete data["__id"];
 		delete data["__schema"];

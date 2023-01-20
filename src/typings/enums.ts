@@ -19,12 +19,9 @@ export enum CommandManagerRejectReason {
 
 export enum CommandType {
 	Fun,
-	Utility,
-	// SinglePlayerGame,
-	// MultiPlayerGame,
+	RPG,
+	Essentials,
 	Information,
-	// Contact,
-	// Network,
 	Miscellaneous,
 	SubcommandGroup,
 	// 不管上面再多加幾個分類，Developer 永遠都要在最底端

@@ -1,6 +1,6 @@
 {
 	"bot": {
-		"name": "froggy",
+		"name": "Froggy",
 		"version": "beta_2",
 		"releaseDate": {
 			"year": 2023,
@@ -41,6 +41,7 @@
 			"serverNotifyId": "1009701267788005417"
 		}
 	},
+	"shortcut": "f",
 	"devGuild": {
 		"id": "808945802100736050"
 	}

@@ -7,7 +7,7 @@ if (!process.env.BUG_WEBHOOK_URL) throw new Error("Bug webhook url not configure
 if (!process.env.SUGGEST_WEBHOOK_URL) throw new Error("Suggest webhook url not configured.");
 if (!process.env.REPLY_WEBHOOK_URL) throw new Error("Reply webhook url not configured.");
 if (!process.env.NETWORK_WEBHOOK_URL) throw new Error("Network webhook url not configured.");
-if (!process.env.OSU_APIKEY) throw new Error("Osu API key not configured.");
+if (!process.env.MONGODB_CONNECT_URL) throw new Error("Mongo DB url not configured.");
 
 export default {
 	bot: {
@@ -43,7 +43,7 @@ export default {
 		}
 	},
 
-	osu: {
-		apikey: process.env.OSU_APIKEY
+	database: {
+		key: process.env.MONGODB_CONNECT_URL
 	}
 };

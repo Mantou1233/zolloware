@@ -47,8 +47,8 @@ function loadCommands(dirPath: string): {
 	const globalCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 	const devCommands: RESTPostAPIApplicationCommandsJSONBody[] = [];
 
-	const zGlobalCommands: [string, SlashCommandSubcommandBuilder][] = [];
-	const zDevCommands: [string, SlashCommandSubcommandBuilder][] = [];
+	const shortcutGlobalCommands: [string, SlashCommandSubcommandBuilder][] = [];
+	const shortcutDevCommands: [string, SlashCommandSubcommandBuilder][] = [];
 
 	const commandFiles = fs.readdirSync(dirPath);
 	for (const file of commandFiles) {
@@ -80,7 +80,7 @@ function loadCommands(dirPath: string): {
 
 			const subcommandBuilder = parseSubcommand(subcommand);
 			(subcommand.type === CommandType.Developer ? devBuilder : globalBuilder).addSubcommand(subcommandBuilder);
-			(subcommand.type === CommandType.Developer ? zDevCommands : zGlobalCommands).push([command.name, subcommandBuilder]);
+			(subcommand.type === CommandType.Developer ? shortcutDevCommands : shortcutGlobalCommands).push([command.name, subcommandBuilder]);
 			globalExist ||= subcommand.type !== CommandType.Developer;
 			devExist ||= subcommand.type === CommandType.Developer;
 		}
@@ -90,18 +90,18 @@ function loadCommands(dirPath: string): {
 	}
 
 	// 處理 z 指令
-	if (zGlobalCommands.length) {
-		const builder = new SlashCommandBuilder().setName("z").setDescription("執行 z 指令").setDMPermission(false);
-		zGlobalCommands.forEach(([parent, command]) => {
-			command.setName(Translator.getZShortcut([parent, command.name])!);
+	if (shortcutGlobalCommands.length) {
+		const builder = new SlashCommandBuilder().setName(constant.shortcut).setDescription("執行shortcut").setDMPermission(false);
+		shortcutGlobalCommands.forEach(([parent, command]) => {
+			command.setName(Translator.getShortcut([parent, command.name])!);
 			builder.addSubcommand(command);
 		});
 		globalCommands.push(builder.toJSON());
 	}
-	if (zDevCommands.length) {
-		const builder = new SlashCommandBuilder().setName("z").setDescription("執行 z 指令").setDMPermission(false);
-		zDevCommands.forEach(([parent, command]) => {
-			command.setName(Translator.getZShortcut([parent, command.name])!);
+	if (shortcutDevCommands.length) {
+		const builder = new SlashCommandBuilder().setName(constant.shortcut).setDescription("執行shortcut").setDMPermission(false);
+		shortcutDevCommands.forEach(([parent, command]) => {
+			command.setName(Translator.getShortcut([parent, command.name])!);
 			builder.addSubcommand(command);
 		});
 		devCommands.push(builder.toJSON());

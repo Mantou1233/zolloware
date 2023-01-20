@@ -12,9 +12,9 @@ export class Translator extends null {
 	 * @param commandName 由群組名稱及指令名稱構成的群組指令全名
 	 * @returns 捷徑名稱
 	 */
-	static getZShortcut([groupName, commandname]: [string, string]): string | void {
-		if (!(groupName in this.ZShortcut)) return;
-		const nextLayer = this.ZShortcut[groupName as keyof typeof this.ZShortcut];
+	static getShortcut([groupName, commandname]: [string, string]): string | void {
+		if (!(groupName in this.Shortcut)) return;
+		const nextLayer = this.Shortcut[groupName as keyof typeof this.Shortcut];
 
 		if (!(commandname in nextLayer)) return;
 		return nextLayer[commandname as keyof typeof nextLayer];
@@ -22,14 +22,14 @@ export class Translator extends null {
 
 	/**
 	 * 將 z 指令的捷徑名稱轉換為群組指令全名
-	 * @param zShortcut z 指令的捷徑名稱
+	 * @param shortcut z 指令的捷徑名稱
 	 * @returns 群組指令全名
 	 */
-	static getCommandName(zShortcut: string): [string, string] | void {
-		for (const groupName in this.ZShortcut) {
-			const nextLayer = this.ZShortcut[groupName as keyof typeof this.ZShortcut];
+	static getCommandName(shortcut: string): [string, string] | void {
+		for (const groupName in this.Shortcut) {
+			const nextLayer = this.Shortcut[groupName as keyof typeof this.Shortcut];
 			for (const commandName in nextLayer) {
-				if (nextLayer[commandName as keyof typeof nextLayer] === zShortcut) {
+				if (nextLayer[commandName as keyof typeof nextLayer] === shortcut) {
 					return [groupName, commandName];
 				}
 			}
@@ -81,25 +81,9 @@ export class Translator extends null {
 	/**
 	 * z 指令的對照表
 	 */
-	static readonly ZShortcut = Object.freeze({
-		diep: {
-			fact: "f",
-			random: "rt",
-			server: "s",
-			tank: "t",
-			wiki: "w"
-		},
-		music: {
-			join: "j",
-			leave: "l",
-			play: "p",
-			playlist: "pl",
-			remove: "rm",
-			resend: "rs"
-		},
-		osu: {
-			best: "bp",
-			user: "u"
+	static readonly Shortcut = Object.freeze({
+		economy: {
+			test: "t"
 		}
 	});
 
@@ -199,13 +183,11 @@ export class Translator extends null {
 		// [CommandType.Contact]: "聯繫",
 		[CommandType.Developer]: "開發者專用",
 		[CommandType.Fun]: "娛樂",
-		// [CommandType.SinglePlayerGame]: "單人遊戲",
-		// [CommandType.MultiPlayerGame]: "多人遊戲",
 		[CommandType.Information]: "資訊",
+		[CommandType.RPG]: "RPG",
 		[CommandType.Miscellaneous]: "雜項",
-		// [CommandType.Network]: "聯絡網",
 		[CommandType.SubcommandGroup]: "指令群",
-		[CommandType.Utility]: "功能"
+		[CommandType.Essentials]: "功能"
 	});
 
 	/**
@@ -217,13 +199,11 @@ export class Translator extends null {
 		// [CommandType.Contact]: "與 HiZollo 的開發者聯絡",
 		[CommandType.Developer]: "開發者專用指令",
 		[CommandType.Fun]: "適合在聊天室跟朋友玩樂",
-		// [CommandType.SinglePlayerGame]: "讓你在沒人的凌晨三點邊吃美味蟹堡邊玩遊戲",
-		// [CommandType.MultiPlayerGame]: "跟伺服器上的夥伴一起玩遊戲",
-		[CommandType.Information]: "顯示 HiZollo 的相關資訊",
+		[CommandType.RPG]: "好玩的功能",
+		[CommandType.Information]: "顯示 Froggy 的相關資訊",
 		[CommandType.Miscellaneous]: "開發者懶得分類的指令",
-		// [CommandType.Network]: "查看 HiZollo 聯絡網的相關功能",
 		[CommandType.SubcommandGroup]: "集合很多指令的指令",
-		[CommandType.Utility]: "HiZollo 多少還是會一些有用的功能好嗎"
+		[CommandType.Essentials]: "一些有用的功能"
 	});
 
 	/**

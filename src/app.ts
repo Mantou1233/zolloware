@@ -7,10 +7,14 @@
 
 /******************* 系統變數設置 *******************/
 import { ApplicationCommandOptionType, EmbedBuilder, GatewayIntentBits, Options } from "discord.js";
+
 import "./djsAddon";
+
 import config from "@root/config";
+
 import { ExtendedClient } from "./classes/ExtendedClient";
 import { CommandManagerRejectReason, CommandParserOptionResultStatus } from "./typings/enums";
+
 const client = new ExtendedClient({
 	intents: [
 		GatewayIntentBits.Guilds,
@@ -223,3 +227,4 @@ client.on("guildDelete", guild => {
 /******************* 登入機器人 *******************/
 client.login(config.bot.token);
 /**/
+export { client };

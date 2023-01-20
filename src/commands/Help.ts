@@ -12,20 +12,20 @@ import {
 	SelectMenuBuilder,
 	SelectMenuInteraction
 } from "discord.js";
-import config from "@root/config";
 import { Command } from "../classes/Command";
 import { Source } from "../classes/Source";
 import { CommandType } from "../typings/enums";
 import { ExtendedCommandOptionData } from "../typings/types";
 import { SubcommandGroup } from "../typings/interfaces";
 import { Translator } from "../classes/Translator";
+import $ from "../services/translatePlaceholder";
 
 export default class Help extends Command<[string]> {
 	constructor() {
 		super({
 			type: CommandType.Information,
 			name: "help",
-			description: "顯示 Zolloware 的指令清單或查詢指令用法",
+			description: $("顯示 %bot.name% 的指令清單或查詢指令用法"),
 			options: [
 				{
 					type: ApplicationCommandOptionType.String,
@@ -54,7 +54,7 @@ export default class Help extends Command<[string]> {
 		const command = source.client.commands.search([commandName, undefined]);
 		if (!command || (command instanceof Command && command.type === CommandType.Developer && !source.channel?.isTestChannel())) {
 			await source.defer({ ephemeral: true });
-			await source.update(`這個指令不存在，請使用 \`${config.bot.prefix}help\` 或 \`/help\` 查看當前的指令列表`);
+			await source.update($(`這個指令不存在，請使用 \`%bot.prefix%help\` 或 \`/help\` 查看當前的指令列表`));
 			return;
 		}
 
@@ -90,8 +90,8 @@ export default class Help extends Command<[string]> {
 
 	public getEmbedsForAllTypes(source: Source): EmbedBuilder[] {
 		const embed = new EmbedBuilder()
-			.applySettings(source.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
-			.setDescription(`以下是我的指令列表，你可以使用 \`${config.bot.prefix}help 指令名稱\` 或 \`/help 指令名稱\` 來查看特定指令的使用方法`)
+			.applySettings(source.member, $("%bot.name% 的幫助中心"), "使用指令時不須連同 [] 或 <> 一起輸入")
+			.setDescription($(`以下是我的指令列表，你可以使用 \`%bot.prefix%help 指令名稱\` 或 \`/help 指令名稱\` 來查看特定指令的使用方法`))
 			.setThumbnail(source.client.user?.displayAvatarURL({ extension: "png", size: 2048 }) ?? null);
 
 		let counter = 0;
@@ -147,7 +147,7 @@ export default class Help extends Command<[string]> {
 	public getEmbedsForType(interaction: SelectMenuInteraction<"cached">, type: CommandType): EmbedBuilder[] {
 		let description =
 			`以下是所有**${Translator.getCommandTypeChinese(type)}**分類中的指令\n` +
-			`你可以使用 \`${config.bot.prefix}help 指令名稱\` 或 \`/help 指令名稱\` 來查看特定指令的使用方法\n\n`;
+			$(`你可以使用 \`%bot.prefix%help 指令名稱\` 或 \`/help 指令名稱\` 來查看特定指令的使用方法\n\n`);
 
 		const commands =
 			type === CommandType.SubcommandGroup
@@ -158,7 +158,7 @@ export default class Help extends Command<[string]> {
 
 		return [
 			new EmbedBuilder()
-				.applySettings(interaction.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
+				.applySettings(interaction.member, $("%bot.name% 的幫助中心"), "使用指令時不須連同 [] 或 <> 一起輸入")
 				.setDescription(description)
 				.setThumbnail(interaction.client.user?.displayAvatarURL({ extension: "png", size: 2048 }) ?? null)
 		];
@@ -166,15 +166,15 @@ export default class Help extends Command<[string]> {
 
 	public getEmbedForCommand(source: { client: Client; member: GuildMember }, command: Command): EmbedBuilder {
 		return new EmbedBuilder()
-			.applySettings(source.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
+			.applySettings(source.member, $("%bot.name% 的幫助中心"), "使用指令時不須連同 [] 或 <> 一起輸入")
 			.setDescription(this.getDescriptionForCommand(command))
 			.setThumbnail(source.client.user?.displayAvatarURL({ extension: "png", size: 2048 }) ?? null);
 	}
 
 	public getEmbedForSubcommandGroup(source: { client: Client; member: GuildMember }, groupName: string, commands: SubcommandGroup): EmbedBuilder {
 		const embed = new EmbedBuilder()
-			.applySettings(source.member, "HiZollo 的幫助中心", "使用指令時不須連同 [] 或 <> 一起輸入")
-			.setDescription(`這是 HiZollo 的 ${groupName} 指令清單`)
+			.applySettings(source.member, $("%bot.name% 的幫助中心"), "使用指令時不須連同 [] 或 <> 一起輸入")
+			.setDescription($(`這是 %bot.name% 的 ${groupName} 指令清單`))
 			.setThumbnail(source.client.user?.displayAvatarURL({ extension: "png", size: 2048 }) ?? null);
 
 		commands.data.each(command => {

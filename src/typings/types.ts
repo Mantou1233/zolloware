@@ -15,6 +15,7 @@ import {
 	PageSystemDescriptionOptions,
 	PageSystemEmbedFieldOptions
 } from "./interfaces";
+import { Database } from "quickmongo";
 
 export type Intersect<T, U> = { [K in keyof T & keyof U]: T[K] | U[K] };
 
@@ -132,6 +133,9 @@ declare module "discord.js" {
 		 * 用於記錄開發者回覆的 Webhook
 		 */
 		replyHook: WebhookClient;
+
+		
+		db: Database;
 
 		/**
 		 * 暫時封鎖一名使用者

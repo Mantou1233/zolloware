@@ -1,6 +1,7 @@
 import { Command } from "../classes/Command";
 import { Source } from "../classes/Source";
 import { CommandType } from "../typings/enums";
+import $ from "../services/translatePlaceholder";
 
 export default class Ping extends Command<[]> {
 	constructor() {
@@ -15,6 +16,11 @@ export default class Ping extends Command<[]> {
 		await source.defer();
 		const message = await source.update("計算中……");
 		const ping = message.createdTimestamp - source.createdTimestamp;
-		await message.edit(`:information_source:｜Pong！機器人延遲為：${ping}ms，API 延遲為：${source.client.ws.ping}ms`);
+		await message.edit(
+			$(`:information_source:｜Pong！機器人延遲為：%ping%ms，API 延遲為：%ws_ping%ms`, {
+				ping,
+				ws_ping: source.client.ws.ping
+			})
+		);
 	}
 }

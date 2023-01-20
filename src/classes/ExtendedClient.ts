@@ -14,6 +14,7 @@ import randomElement from "../services/randomElement";
 import randomInt from "../services/randomInt";
 import { Translator } from "./Translator";
 import { MessageTriggerManager } from "./MessageTriggerManager";
+import { db } from "./Profile";
 
 /**
  * 擴展的 client
@@ -31,6 +32,8 @@ export class ExtendedClient extends Client {
 
 		if (!process.env.BLOCKED_USERS) throw new Error("Blocked users not configured.");
 		this.blockedUsers = new Set(eval(process.env.BLOCKED_USERS) as string[]);
+
+		this.db = db;
 
 		this.logger = new WebhookLogger(this);
 
@@ -60,6 +63,7 @@ export class ExtendedClient extends Client {
 	 * 初始化這個 client
 	 */
 	public async initialize(): Promise<void> {
+		await this.db.connect();
 		await this.commands.load(path.join(__dirname, "../commands"));
 		await this.triggers.load(path.join(__dirname, "../triggers"));
 		await this.autocomplete.load(path.join(__dirname, "../autocomplete"));

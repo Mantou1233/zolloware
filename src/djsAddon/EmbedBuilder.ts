@@ -13,7 +13,7 @@ Object.defineProperties(EmbedBuilder.prototype, {
 
 	setConfig: {
 		value: function (this: EmbedBuilder): EmbedBuilder {
-			return this.setColor(0x94b4fa);
+			return this.setColor(0xcff2ff); // 0x94b4fa
 		}
 	},
 

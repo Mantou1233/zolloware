@@ -7,12 +7,14 @@ import { CommandParser } from "./CommandParser";
 import { ExtendedClient } from "./ExtendedClient";
 import { Source } from "./Source";
 import config from "@root/config";
+import constant from "@root/constant.json";
 import missingPermissions from "../services/missingPermissions";
 import { CommandManagerRejectReason, CommandParserOptionResultStatus, CommandType } from "../typings/enums";
 import { CommandManagerEvents, SubcommandGroup } from "../typings/interfaces";
 import { CommandManagerRejectInfo } from "../typings/types";
 import { SubcommandManager } from "./SubcommandManager";
 import { Translator } from "./Translator";
+import { GuildProfile, UserProfile } from "./Profile";
 
 /**
  * 掌管所有與指令相關的操作，並支援單層的群組指令，必須保證 help 指令存在
@@ -102,6 +104,12 @@ export class CommandManager extends EventEmitter {
 		if (!(command instanceof Command)) return;
 
 		if (command.type === CommandType.Developer && !channel.isTestChannel()) return;
+
+		const p = await UserProfile(interaction);
+		await p.checkAndUpdate();
+
+		const g = await GuildProfile(interaction);
+		await g.checkAndUpdate();
 
 		/***** 檢查執行權限 *****/
 		if (command.twoFactorRequired && interaction.guild.mfaLevel === GuildMFALevel.Elevated) {
@@ -222,6 +230,12 @@ export class CommandManager extends EventEmitter {
 
 		if (command.type === CommandType.Developer && !message.channel.isTestChannel()) return;
 
+		const p = await UserProfile(message);
+		await p.checkAndUpdate();
+
+		const g = await GuildProfile(message);
+		await g.checkAndUpdate();
+
 		/***** 檢查執行權限 *****/
 		if (command.twoFactorRequired && message.guild.mfaLevel === GuildMFALevel.Elevated) {
 			this.emit("reject", new Source(message, channel, member), {
@@ -301,8 +315,8 @@ export class CommandManager extends EventEmitter {
 		let first = commandName[0].toLowerCase();
 		let second = commandName[1]?.toLowerCase();
 
-		// 先找 z 指令
-		if (first === "z" && second) {
+		// 先找 shortcut 指令
+		if (first === constant.shortcut && second) {
 			const zCommandName = Translator.getCommandName(second);
 			if (zCommandName) {
 				[first, second] = zCommandName;

@@ -1,33 +1,34 @@
-import { Source } from "./../classes/Source";
+import constant from "@root/constant.json";
+import config from "@root/config";
 
 /**
- * 一些replacer
+ * 一個replacer，
+ * obj的key是你要match的main指令, e.g. `asdf` matchs `%asdf.asdfasdf%`.
  */
-const replacers: { [key: string]: (source: Source, str: string) => string } = Object.freeze({
-	bot: function (source, str) {
-		const [_bot, sub, ..._args] = str.split(".");
+const replacers: { [key: string]: (str: string, origin: string) => string } = Object.freeze({
+	bot: function (str, origin) {
+		const [sub, ..._args] = str.split(".");
 		switch (sub) {
 			case "name": {
-				return "froggy";
+				return constant.bot.name;
 			}
-			case "fullname": {
-				return source.client.user?.username || "o";
+
+			case "prefix": {
+				return config.bot.prefix;
 			}
 		}
-		return str;
+		return origin;
 	}
 });
 
 /**
- * 生成一個新的placeholder translator
+ * 生成一個新的placeholder Replacer
  * @param source 指令執行的context
- * @return 一個translator，可以傳入string 翻譯爲翻譯的str
+ * @return 一個Replacer，可以傳入string 翻譯爲翻譯的str
  */
-export default function placeholder(source: Source) {
-	return function $(str: string) {
-		for (let [key, value] of Object.entries(replacers)) {
-			str = str.replace(new RegExp(`/%${key}\.(.{1,})%/g`), (_origin, arg1, _n, _match) => value(source, arg1));
-		}
-		return str;
-	};
+export default function $(str: string, options: { [key: string]: string | number } = {}): string {
+	for (let [key, value] of Object.entries(replacers))
+		str = str.replace(new RegExp(`%${key}\.(.+?)%`, "g"), (origin, arg1, _n, _match) => value(arg1, origin) || origin);
+	for (let [key, value] of Object.entries(options)) str = str.replace(new RegExp(`%${key}%`, "g"), `${value}`);
+	return str;
 }

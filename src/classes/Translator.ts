@@ -83,7 +83,8 @@ export class Translator extends null {
 	 */
 	static readonly Shortcut = Object.freeze({
 		economy: {
-			test: "t"
+			sign: "si",
+			balance: "b"
 		}
 	});
 

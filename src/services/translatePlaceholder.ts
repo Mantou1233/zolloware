@@ -26,9 +26,12 @@ const replacers: { [key: string]: (str: string, origin: string) => string } = Ob
  * @param source 指令執行的context
  * @return 一個Replacer，可以傳入string 翻譯爲翻譯的str
  */
-export default function $(str: string, options: { [key: string]: string | number } = {}): string {
-	for (let [key, value] of Object.entries(replacers))
+export default function $(
+	str: string,
+	options: { [key: string]: string | number } & { [key: `_${string}`]: (str: string, origin: string) => string } = {}
+): string {
+	for (let [key, value] of [...Object.entries(replacers), ...Object.entries(options).filter(([key]) => key.startsWith("_"))] as any)
 		str = str.replace(new RegExp(`%${key}\.(.+?)%`, "g"), (origin, arg1, _n, _match) => value(arg1, origin) || origin);
-	for (let [key, value] of Object.entries(options)) str = str.replace(new RegExp(`%${key}%`, "g"), `${value}`);
+	for (let [key, value] of Object.entries(options).filter(([key]) => !key.startsWith("_"))) str = str.replace(new RegExp(`%${key}%`, "g"), `${value}`);
 	return str;
 }

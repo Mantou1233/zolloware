@@ -2,20 +2,40 @@ import { Database } from "quickmongo";
 import config from "@root/config";
 
 const UserSchema = {
-	ducks: 0
+	coin: 2000,
+	bank: 5000,
+	bankLimit: 20000,
+	crystal: 5,
+	signLastTimestamp: -1,
+	signCombo: -1,
+	signCount: -1,
+	signFailedCount: -1,
+	xp: {
+		xp: 0,
+		max: 0,
+		level: -1
+	}
 } satisfies UserSchema;
 
-const GuildSchema = {
-	ducks: 0
-} satisfies GuildSchema;
+const GuildSchema = {} satisfies GuildSchema;
 
 interface UserSchema {
-	ducks: number;
+	coin: number;
+	bank: number;
+	bankLimit: number;
+	crystal: number;
+	signLastTimestamp: number;
+	signCombo: number;
+	signCount: number;
+	signFailedCount: number;
+	xp: {
+		xp: number;
+		max: number;
+		level: number;
+	};
 }
 
-interface GuildSchema {
-	ducks: number;
-}
+interface GuildSchema {}
 
 export const db = new Database(config.database.key, {
 	collectionName: "zolloware"

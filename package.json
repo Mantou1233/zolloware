@@ -37,14 +37,17 @@
 		"@discordjs/voice": "^0.13.0",
 		"@hizollo/games": "^2.4.0",
 		"@hizollo/osu-api": "^1.2.0",
+		"@types/ms": "^0.7.31",
 		"discord.js": "^14.6.0",
 		"dotenv": "^16.0.3",
 		"emoji-regex": "^10.2.1",
 		"ffmpeg-static": "^5.1.0",
 		"libsodium-wrappers": "^0.7.10",
+		"ms": "^2.1.3",
 		"play-dl": "^1.9.6",
 		"quickmongo": "^5.2.0",
-		"typescript": "^4.9.3"
+		"typescript": "^4.9.3",
+		"zod": "^3.20.2"
 	},
 	"devDependencies": {
 		"prettier": "^2.8.1",

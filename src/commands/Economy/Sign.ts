@@ -8,8 +8,8 @@ export default class DiepServer extends Command<[]> {
 		super({
 			type: CommandType.Information,
 			parent: "economy",
-			name: "test",
-			description: "ow"
+			name: "sign",
+			description: "簽到領取下你可以領的東西"
 		});
 	}
 

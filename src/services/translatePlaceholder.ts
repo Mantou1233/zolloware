@@ -17,7 +17,7 @@ function $(format: string, addtionalTraslator: TranslatorType = {}) {
 	const r = format.replace(/%([0-9a-zA-Z\.\_\-]*?)%/g, (_, replaceName) => {
 		const _s = _translator(replaceName, addtionalTraslator);
 		return _s;
-	});
+	}).replaceAll("\\%", "%").replaceAll("%\\", "%");
 
 	return r;
 }

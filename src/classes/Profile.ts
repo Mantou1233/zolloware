@@ -81,12 +81,14 @@ export class Profile<T extends { [key: string]: any } = { [key: string]: any }> 
 
 	public async newSchema() {
 		if (!this.__schema) return false;
+		if (this.__schema.__no) return false;
 		Object.assign(this, this.__schema);
 		return void this.save();
 	}
 
 	public async updateSchema() {
 		if (!this.__schema) return false;
+		if (this.__schema.__no) return false;
 		let raw = this.raw;
 		Object.assign(this, this.__schema, raw);
 		return this.save();
@@ -119,4 +121,9 @@ export async function UserProfile(id: any): Promise<Profile<UserSchema> & { [K i
 	).init()) as unknown as Profile<UserSchema> & {
 		[K in keyof UserSchema]: UserSchema[K];
 	};
+}
+export async function GlobalProfile(): Promise<Profile<any> & any> {
+	return (await new Profile<any>("var", "system", {
+		__no: true
+	}).init()) as unknown as Promise<Profile<any> & any>;
 }

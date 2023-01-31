@@ -197,7 +197,6 @@ process.on("uncaughtException", error => {
 client.on("messageCreate", message => {
 	client.addonCommand(message);
 	client.randomReact(message);
-	client.poll(message);
 	client.commands.onMessageCreate(message);
 	client.triggers.onMessageCreate(message);
 });

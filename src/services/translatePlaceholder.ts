@@ -1,37 +1,51 @@
-import constant from "@root/constant.json";
 import config from "@root/config";
+import constant from "@root/constant.json";
 
-/**
- * 一個replacer，
- * obj的key是你要match的main指令, e.g. `asdf` matchs `%asdf.asdfasdf%`.
- */
-const replacers: { [key: string]: (str: string, origin: string) => string } = Object.freeze({
-	bot: function (str, origin) {
-		const [sub, ..._args] = str.split(".");
-		switch (sub) {
-			case "name": {
-				return constant.bot.name;
-			}
-
-			case "prefix": {
-				return config.bot.prefix;
-			}
-		}
-		return origin;
+const constants: TranslatorType = {
+	bot: {
+		...constant.bot,
+		...config.bot,
+		token: "d3d3LnlvdXR1.YmUuY29tL3dhdGNoP3Y9ZFF3NHc.5V2dYY1E= ~NODOT~"
 	}
-});
+};
 
-/**
- * 生成一個新的placeholder Replacer
- * @param source 指令執行的context
- * @return 一個Replacer，可以傳入string 翻譯爲翻譯的str
- */
-export default function $(
-	str: string,
-	options: { [key: string]: string | number } & { [key: `_${string}`]: (str: string, origin: string) => string } = {}
-): string {
-	for (let [key, value] of [...Object.entries(replacers), ...Object.entries(options).filter(([key]) => key.startsWith("_"))] as any)
-		str = str.replace(new RegExp(`%${key}\.(.+?)%`, "g"), (origin, arg1, _n, _match) => value(arg1, origin) || origin);
-	for (let [key, value] of Object.entries(options).filter(([key]) => !key.startsWith("_"))) str = str.replace(new RegExp(`%${key}%`, "g"), `${value}`);
-	return str;
+interface TranslatorType {
+	[key: string]: string | number | TranslatorType;
 }
+
+function $(format: string, addtionalTraslator: TranslatorType = {}) {
+	const r = format.replace(/%([0-9a-zA-Z\.\_\-]*?)%/g, (_, replaceName) => {
+		const _s = _translator(replaceName, addtionalTraslator);
+		return _s;
+	});
+
+	return r;
+}
+
+function _translator(piece: string, additionalTranslator: TranslatorType) {
+	const _p = piece.split(".");
+	const _v = get_value(_p, additionalTranslator);
+	return _v ? _v.toString() : "";
+}
+
+function get_value(keys: string[], additionalTranslator: TranslatorType) {
+	// normal translate
+	const v1 = get_translate(keys, constants);
+	if (v1) return v1;
+	const v2 = get_translate(keys, additionalTranslator);
+	if (v2) return v2;
+	return null;
+}
+
+function get_translate(keys: string[], translator: TranslatorType): string | null {
+	let k: TranslatorType | string | undefined = translator;
+	for (const key of keys) {
+		if (!k) return null;
+		if (typeof k === "string") return k;
+		k = k[key] ? `${k[key]}` : undefined;
+	}
+	if (!k) return null;
+	return k as any;
+}
+
+export { $ };

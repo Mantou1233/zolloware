@@ -6,7 +6,6 @@ import { CommandType } from "../../typings/enums";
 import { EmbedBuilder } from "discord.js";
 import ms from "ms";
 import randomInt from "@root/src/services/randomInt";
-import randomElement from "@root/src/services/randomElement";
 
 export default class Sign extends Command<[]> {
 	constructor() {
@@ -18,38 +17,35 @@ export default class Sign extends Command<[]> {
 		});
 	}
 
-	private failMessages = ["啊你今天不是簽到過了嘛？別來煩我 =.=", "找罵啊？給我明天再來", "你到底在幹嘛", "啊啊幹不要再來煩我了", "滾"];
+	// private failMessages = ["啊你今天不是簽到過了嘛？別來煩我 =.=", "沒有", "no", "I SAID NO", "滾"];
 
 	public async execute(source: Source): Promise<void> {
 		await source.defer();
 		const p = await UserProfile(source);
-		const dp = new Date(p.signLastTimestamp ?? Date.now());
-		const dn = new Date();
-		const dt = new Date(dn);
-		dt.setDate(dt.getDate() + 1);
-		dt.setHours(0, 0, 0, 0);
-		if (dp.getDay() == dn.getDay()) {
-			await source.update(`${randomElement(this.failMessages)}(等待${ms(dt.getTime() - dn.getTime())}再來)`);
+		const lastSignDate = new Date(p.signLastTimestamp ?? Date.now());
+		const todayDate = new Date();
+		const tomorrowDate = this.offsetDate(new Date(), 1);
+		const yesterdayDate = this.offsetDate(new Date(), -1);
+		if (lastSignDate.getDay() == todayDate.getDay()) {
+			await source.update(`你今天已經簽到過了！${ms(tomorrowDate.getTime() - todayDate.getTime())}之後再來`);
 			return;
 		}
 
-		if (dp.getDay() == dt.getDay()) {
+		if (lastSignDate.getDay() == yesterdayDate.getDay()) {
 			p.signCombo++;
 		} else {
 			p.signCombo = 1;
 		}
 
-		let isFirstSign = false,
-			giveCoin = randomInt(50, 100);
+		let giveCoin = randomInt(50, 100);
 
-		if (p.lastSign == 0) {
-			isFirstSign = true;
+		if (p.signLastTimestamp == -1) {
 			giveCoin = Math.floor(giveCoin * 1.5);
 		}
 
 		giveCoin = Math.floor(giveCoin * (p.signCombo * 0.3));
 
-		p.lastSign = Date.now();
+		p.signLastTimestamp = Date.now();
 
 		p.signCount++;
 
@@ -59,14 +55,16 @@ export default class Sign extends Command<[]> {
 			embeds: [
 				new EmbedBuilder()
 					.applySettings(source.member, "簽到成功！")
-					.setDescription(
-						`${isFirstSign ? "這是你的第一次簽到！" : "你怎麽又來了..."}\n成功獲得：\n金幣 · 1000\n送你一隻鴨子！你現在有${toWords(
-							p.signCount
-						)}隻鴨子！${isFirstSign ? "" : "\n好啦，拿完快點走開"}`
-					)
+					.setDescription(`成功獲得：\n金幣 · ${giveCoin}\n送你一隻鴨子！你現在有${toWords(p.signCount)}隻鴨子！\n連續簽到X`)
 			]
 		});
 
 		await p.save();
+	}
+
+	private offsetDate(date: Date, offset: number = 1) {
+		date.setDate(date.getDate() + offset);
+		date.setHours(0, 0, 0, 0);
+		return date;
 	}
 }

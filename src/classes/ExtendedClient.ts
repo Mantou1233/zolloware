@@ -122,22 +122,6 @@ export class ExtendedClient extends Client {
 	}
 
 	/**
-	 * 需要投票功能的頻道 ID
-	 */
-	private readonly pollChannelId = [constant.mainGuild.channels.announcementId, constant.mainGuild.channels.suggestReportId];
-
-	/**
-	 * 對指定頻道中的訊息附加投票用的表情符號
-	 * @param message 訊息
-	 */
-	public async poll(message: Message): Promise<void> {
-		if (this.pollChannelId.includes(message.channel.id)) {
-			await message.react("👍").catch(() => {});
-			await message.react("👎").catch(() => {});
-		}
-	}
-
-	/**
 	 * 附加指令的前綴
 	 */
 	private readonly addonPrefix = "?";
